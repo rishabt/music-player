@@ -1,33 +1,93 @@
-{% load staticfiles %}
-<!DOCTYPE html>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Team Music | Welcome</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+    <link rel="stylesheet" href="{% static "css/foundation.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/animate.css" %}" />
+    <link rel="stylesheet" href="{% static "css/normalize.css" %}" >
+    <link rel="stylesheet" href="{% static "css/slick.css" %}" >
+    <link rel="stylesheet" href="{% static "css/main.css" %}" >
+    <script src="{% static "js/angular.min.js" %}"></script>
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/vendor/placeholder.js" %}"></script>
+    <script src="{% static "js/foundation.min.js" %}"></script>
+    <script src="{% static "js/foundation/foundation.topbar.js" %}"></script>
+    <script>$(document).foundation();</script>
+    <script src="{% static "js/moment.js" %}"></script>
+    <script src="{% static "js/slick.min.js" %}"></script>
+    <script src="{% static "js/wow.js" %}"></script>
+    <script src="{% static "js/amplify.js" %}"></script>
+    <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
+    <style type="text/css">
+    .bg{
+    	max-width: 100%;
+    	height: auto;
+    	width: auto\9; /* ie8 */
+    }
+    </style>
+  </head>
 
-<html>
+  <body>
 
-<head>
-	<link rel='stylesheet' href='{% static "css/style.css" %}'>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<title>Music Player</title>
-</head>
+    <!--<div class="fixed">
+  		<nav class="top-bar" data-topbar role="navigation">
+    		<li class="name">
+      			<h1><a href="#">Music</a></h1>
+    		</li>
+  		</nav>
+	</div>-->
 
-<body>
-	<form action="" class="search-wrapper cf" method="GET">
-        <input name="query_element" type="text" placeholder="Search here..." required="" maxlength="100">
-        <button type="submit" value="Search">Search</button>
-	</form>
+	<div class="fixed">
+	<div class="inner-wrap">
+	<nav class="tab-bar df-tab-bar hide-for-large-upx stickyx">
+		<section class="left tab-bar-section">
+			<h1 class="title">
+				<span class="orangex ng-binding">Music Player</span> <span class="dim ng-binding"></span>
+			</h1>
+		</section>
+		<section class="right-small"><a class="right-off-canvas-toggle menu-icon" href=""><span></span></a></section>
+	</nav>
+	<aside class="right-off-canvas-menu"><ul class="off-canvas-list"><li><label>Menu</label></li><li><a href="#/">HOME</a></li></ul></aside>
+	</div>
+	</div>
 
+  	<div class="animated-page-hero ng-scope">
+            {% load staticfiles %} 
+            <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-large-up animated fadeInDown">
+            <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-medium-only animated fadeInDown">
+            <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-small-only animated fadeInDown">
+            <div class="background-mask"></div>
+            <div class="row-wrapper">
 
-	{% for link in response_message %}
-	<div class="video_link" style = "display: table;">
-		<span>
-			<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
-		</span>
-		<span style = "vertical-align:middle; display: table-cell;">
-			<a  href={{ link.1 }}> {{ link.0 }} </a>
-		</span> 
-	</div> 
-	<br>
- 	{% endfor %}
-	
-</body>
+                <div class="row">
+                            <div class="small-12 columns text-center">
+                                <div class="hero-text ">
+
+                                        <h1 class="animated fadeInUp _1 "><span class="orangeX">Team</span> Music</h1>
+                                        <hr class="animated fadeInUp _2">
+                                       <h3 class="sub-hero show-for-large-upx animated fadeInDown _3">
+                                       Host your own party</h3> <br>
+                                     <div class="animated fadeInDown _4">
+                <a class="button warning animated big rubberBand _8" ng-href="#" ng-hide="loggedInUser" href="#">    Host a Party    </a>
+                <a class="button warning animated big rubberBand _8" ng-href="#" ng-hide="loggedInUser" href="#">    Enter a Party    </a>
+                                         
+                                     </div>
+
+                            </div>
+
+                    </div> 
+
+                </div>
+    
+
+            </div>
+    </div>
+
+  </body>
 
 </html>

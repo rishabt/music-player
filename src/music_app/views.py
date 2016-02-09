@@ -5,6 +5,7 @@ from django.core import serializers
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
+from django.template import RequestContext
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
@@ -33,6 +34,8 @@ def youtube_search(the_query, videos):
       videos.append(video)
 
 
+def home(request):
+    return render_to_response('index.html', context_instance=RequestContext(request))
 
 #the main view
 def index(request):
