@@ -1,32 +1,79 @@
 {% load staticfiles %}
-<!DOCTYPE html>
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "css/foundation.css" %}" />
+    <link rel="stylesheet" href="{% static "css/foundation.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/animate.css" %}" />
+    <link rel="stylesheet" href="{% static "css/normalize.css" %}" >
+    <link rel="stylesheet" href="{% static "css/slick.css" %}" >
+    <link rel="stylesheet" href="{% static "css/main.css" %}" >
+    <script src="{% static "js/angular.min.js" %}"></script>
+    <script src="{% static "js/vendor/modernizr.js" %}"></script>
+    <script src="{% static "js/vendor/jquery.js" %}"></script>
+    <script src="{% static "js/vendor/placeholder.js" %}"></script>
+    <script src="{% static "js/foundation.min.js" %}"></script>
+    <script src="{% static "js/foundation/foundation.topbar.js" %}"></script>
+    <script>$(document).foundation();</script>
+    <script src="{% static "js/moment.js" %}"></script>
+    <script src="{% static "js/slick.min.js" %}"></script>
+    <script src="{% static "js/wow.js" %}"></script>
+    <script src="{% static "js/amplify.js" %}"></script>
+    <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
+    <style type="text/css">
+    .bg{
+    <-->max-width: 100%;
+    <-->height: auto;
+    <-->width: auto\9; /* ie8 */
+    }
+    </style><script>
+	  
+	function embed_video(link) {
+	html_code = '<iframe id="embeded_video" width="420" height="315" src=' + link +'> </iframe>'
+	$('#embeded_video').html(html_code);
+	};
+	</script>
 
-<html>
-
-<head>
-	<link rel='stylesheet' href='{% static "css/style.css" %}'>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-	<title>Music Player</title>
 </head>
 
-<body>
-	<form action="" class="search-wrapper cf" method="GET">
-        <input name="query_element" type="text" placeholder="Search here..." required="" maxlength="100">
-        <button type="submit" value="Search">Search</button>
-	</form>
+<body> 	
+	<div class="row" style="margin-top: 20px;">
+	<div class="large-3 columns"><br></div>
+	<div class="large-5 columns">
+		<form action="" class="search-wrapper cf" method="GET">
+			<input name="query_element" type="text" placeholder="Search here..." required="" maxlength="100">
+		</form>
+	</div>
+	<div class="large-4 columns">
+		<button type="submit" value="Search">Search</button>
+	</div>
+	</div>
 
 
+	<div class="row">
+	
+	<div class="medium-6 columns">
 	{% for link in response_message %}
-	<div class="video_link" style = "display: table;">
-		<span>
-			<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
-		</span>
-		<span style = "vertical-align:middle; display: table-cell;">
-			<a  href={{ link.1 }}> {{ link.0 }} </a>
-		</span> 
-	</div> 
-	<br>
+		<div class="video_link" style = "display: table; margin-bottom: 20px;">
+			<span>
+				<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
+			</span>
+			<span style = "vertical-align:middle; display: table-cell;">
+				<a  href="javascript: embed_video('{{ link.1 }}');"> {{ link.0 }} </a>
+			</span> 
+		</div>
  	{% endfor %}
+	</div>
+	
+    <div class="medium-6 columns">
+	</div>
+		<div id="embeded_video"> </div>
+    </div>
+
 	
 </body>
 

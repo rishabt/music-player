@@ -52,7 +52,7 @@ def index(request):
           print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
 
 
-        return render_to_response("index.html", {"response_message": videos_returned})
+        return render_to_response("index2.html", {"response_message": videos_returned})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "index.html", {})
+    return render(request, "index2.html", {})
