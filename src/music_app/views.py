@@ -1,11 +1,17 @@
 from django.http import HttpResponse
-from django.shortcuts import render, render_to_response
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, render_to_response, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core import serializers
 from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 from django.template import RequestContext
+from random import randint
+from music_app.models import Room, Song
+from django.utils import timezone
+from django.core.urlresolvers import reverse
+
+
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
@@ -56,3 +62,42 @@ def index(request):
 
     # if the user hasn't entered anything in the search bar, just do nothing
     return render(request, "index2.html", {})
+
+def newroom(request):
+    while True:
+        id = randint(00000,99999)
+        if Room.objects.filter(room_id = id).exists():
+            continue
+        else:
+            break
+
+    new_room = Room(room_id=id)
+    new_room.save()
+    return HttpResponseRedirect(reverse('room', args=(id,)))
+
+def room(request, room_id, play_link=''):
+    room = get_object_or_404(Room, room_id=room_id)
+    song_list = room.song_set.order_by('add_time')
+    context = {'room_id': room_id, 'song_list': song_list, 'play_link':play_link}
+    return render(request, 'room.html', context)
+
+def play_song(request, party_id):
+    party = get_object_or_404(Party, party_id=party_id)
+    song = party.song_set.all()[0]
+    song.delete()
+    return HttpResponseRedirect(reverse('playlist:detail',kwargs={'party_id':party_id}))
+
+def add_song(request, party_id):
+    party = get_object_or_404(Party, party_id=party_id)
+    try:
+        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+    except :
+        return render(request, 'playlist/detail.html', {
+            'party_id': party_id,
+            'song_list': party.song_set.order_by('add_time'),
+            'error_message': "Invalid Link",
+        })
+    else:
+        new_song.save()
+
+        return HttpResponseRedirect(reverse('playlist:detail', args=(party_id,)))

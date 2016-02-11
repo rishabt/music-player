@@ -1,0 +1,28 @@
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<form action="{% url 'addsong' %}" method="post">
+ {% csrf_token %}
+    Add Song Link:<br>
+    <input type="text" name="link"><br>
+    <input type="submit" value="Submit">
+</form>
+
+{% if song_list %}
+    <ul>
+    {% for song in song_list %}
+        <li>{{ song.link }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No songs added yet.</p>
+{% endif %}
+
+<form action="{% url 'playsong' room_id %}" method="post">
+{% csrf_token %}
+<input type="submit" value="Play Next Song">
+</form>
+{% if play_link %}<p>
+<a href="http:{{play_link}}" target="_blank">Playing...</a>
+</p>
+{% endif %}
+
+

@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^$', 'music_app.views.home'),
     url(r'^admin/', admin.site.urls),
     url(r'^search/', include('music_app.urls')),
+    url(r'^room/', include('music_app.urls')),
 ]
 
 
