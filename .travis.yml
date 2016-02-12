@@ -11,3 +11,11 @@ install:
 #   - "pep8 --exclude=migrations --ignore=E501,E225 src"
 script:
   python src/manage.py test
+
+notifications:
+  email:
+    - rishabh.tandon@mail.mcgill.ca
+    - deepak.sharma@mail.mcgill.ca
+    - casimir.desarmeaux@gmail.com
+    - faiz.merchant@mail.mcgill.ca
+    - omar.akkila@mail.mcgill.ca 
