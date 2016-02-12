@@ -7,10 +7,10 @@ install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install pep8 --use-mirrors
   - pip install -r requirements.txt 
-# before_script:
-#   - "pep8 --exclude=migrations --ignore=E501,E225 src"
+before_script:
+  - cd src 
 script:
-  python src/manage.py test
+  python manage.py test
 
 notifications:
   email:
