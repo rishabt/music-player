@@ -33,9 +33,28 @@
     </style><script>
 	  
 	function embed_video(link) {
-	html_code = '<iframe id="embeded_video" width="420" height="315" src=' + link +'> </iframe>'
-	$('#embeded_video').html(html_code);
+
+		var url = link;
+		var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+
+		if (!pattern.test(url)) {
+			html_code = '<iframe id="embeded_video" width="420" height="315" style="background: black;"> </iframe>'
+			$('#embeded_video').html(html_code);
+			alert("Failed to play song. Try again");
+
+		}
+		else {
+			html_code = '<iframe id="embeded_video" width="420" height="315" src=' + link +'> </iframe>'
+			$('#embeded_video').html(html_code);
+		}
 	};
+
+
+	// $( document ).ready(function() {
+
+	// });
+	
+
 	</script>
 
 </head>
@@ -63,16 +82,28 @@
 				<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
 			</span>
 			<span style = "vertical-align:middle; display: table-cell;">
-				<a  href="javascript: embed_video('{{ link.1 }}');"> {{ link.0 }} </a>
+				<a  href="#"> {{ link.0 }} </a>
 			</span> 
 		</div>
  	{% endfor %}
 	</div>
 	
     <div class="medium-6 columns">
+    <div id="embeded_video"> <iframe id="embeded_video" width="420" height="315" style="background: black;"> </iframe></div>
+    {% if song_list%}
+    {% for link in song_list %}
+    <h4> {{ link.link }}<span><a href = "javascript: embed_video('{{ link.link }}');">   play! </a> </span>  </h4> 
+    {% endfor %}
+    {% else %}
+    <h4> Add music to the room to start playing </h4>
+    {% endif %}
 	</div>
-		<div id="embeded_video"> </div>
+
+
+		
     </div>
+
+
 
 	
 </body>
