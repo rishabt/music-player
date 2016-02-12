@@ -77,7 +77,8 @@
 
 	<div class="row">
 	
-	<div class="medium-5 columns">
+	<div class="medium-6 columns">
+	<h5><ins><b> Search Results: </b></ins></h5>
 	{% for link in response_message %}
 		<div class="video_link" style = "display: table; margin-bottom: 20px;">
 			<span>
@@ -90,14 +91,16 @@
  	{% endfor %}
 	</div>
 	
-    <div class="medium-7 columns" style="border-left: 1px solid black; height: 700px">
-    <div id="embeded_video"> <iframe id="embeded_video" width="420" height="315" style="background: black;" align="middle"> </iframe></div>
+    <div class="medium-6 columns" style="border-left: 1px solid black; height: 700px; text-align: center;">
+    <div id="embeded_video"> <iframe id="embeded_video" width="420" height="315" style="background: black; margin-top: 30px;"> </iframe></div>
+    <br>
+    <h5 style="text-align: left; margin-left: 100px;"><ins><b> Room Playlist: </b></ins></h5>
     {% if song_list%}
     {% for link in song_list %}
-    <h4> {{ link.link }}<span><a href = "javascript: embed_video('{{ link.link }}');">   play! </a> </span>  </h4> 
+    <h5> {{ link.link }}<span><a href = "javascript: embed_video('{{ link.link }}');">  --- play! </a> </span>  </h5> 
     {% endfor %}
     {% else %}
-    <h4> Add music to the room to start playing </h4>
+    <h5> <a href="#"> Add music to the room to start playing</a> </h5>
     {% endif %}
 	</div>
 
