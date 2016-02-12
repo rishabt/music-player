@@ -4,6 +4,8 @@ from django.core.urlresolvers import reverse
 from django.core.urlresolvers import resolve
 from music_app.views import newroom
 from music_app.views import room
+from music_app.views import home
+from music_app.views import youtube_search
 
 class BasicTest(unittest.TestCase):
     def setUp(self):
@@ -31,3 +33,11 @@ class BasicTest(unittest.TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code,200)
         self.assertEqual(response.templates[0].name, 'index.html')
+        self.assertEqual(response.resolver_match.func, home)
+
+    def test_youtube(self):
+        """Test of youtube function being called"""
+        response = self.client.get(reverse('create a room'), follow = True)
+        newURL = response.request["PATH_INFO"]
+        newURL = newURL + "?query_element=test"
+        self.assertEqual(response.status_code, 200)
