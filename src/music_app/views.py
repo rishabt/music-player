@@ -29,8 +29,6 @@ def youtube_search(the_query, videos):
   ).execute()
 
   video = []
-
-
   for search_result in search_response.get("items", []):
     video = []
     if search_result["id"]["kind"] == "youtube#video":
@@ -46,6 +44,8 @@ def home(request):
 #the main view
 def room(request, room_id):
     videos_returned = []
+    room = get_object_or_404(Room, room_id=room_id)
+    song_list = room.song_set.order_by('add_time')
 
     #get the query element and send it to the search youtube method, then send the results to the array
     if request.method == 'GET' and request.GET.get("query_element") :
@@ -57,28 +57,43 @@ def room(request, room_id):
           print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
 
 
-        return render_to_response("party_room.html", {"response_message": videos_returned})
+        return render_to_response("party_room.html", {"response_message": videos_returned, "song_list": song_list})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "party_room.html", {})
+    return render(request, "party_room.html", {"song_list": song_list})
 
 def newroom(request):
+
+
+    youtube_query = "Deepak"
+    videos_returned = []
+
+    try:
+      youtube_search(youtube_query, videos_returned)
+    except HttpError, e:
+      if e.resp.status == 403:
+        return render(request, "index.html", {"error_message": "true"})
     while True:
-        id = randint(00000,99999)
-        if Room.objects.filter(room_id = id).exists():
-            continue
-        else:
-            break
+      id = randint(00000,99999)
+      if Room.objects.filter(room_id = id).exists():
+        continue
+      else:
+        break
 
     new_room = Room(room_id=id)
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,)))
 
+
+
+
+
+
 # def room(request, room_id, play_link=''):
-#     room = get_object_or_404(Room, room_id=room_id)
-#     song_list = room.song_set.order_by('add_time')
-#     context = {'room_id': room_id, 'song_list': song_list, 'play_link':play_link}
-#     return render(request, 'index2.html', context)
+    # room = get_object_or_404(Room, room_id=room_id)
+    # song_list = room.song_set.order_by('add_time')
+    # context = {'room_id': room_id, 'song_list': song_list, 'play_link':play_link}
+    # return render(request, 'index2.html', context)
 
 # def play_song(request, party_id):
 #     party = get_object_or_404(Party, party_id=party_id)
