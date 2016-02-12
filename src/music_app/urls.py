@@ -19,9 +19,8 @@ from . import views
 
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
     url(r'^(?P<room_id>[0-9]+)/$', views.room, name='room'),
     url(r'^newroom/$', views.newroom, name='create a room'),
-    url(r'^(?P<room_id>[0-9]+)/addsong/$', views.add_song, name='add a song'),
-    url(r'^(?P<room_id>[0-9]+)/playsong/$', views.play_song, name='play a song'),
+    # url(r'^(?P<room_id>[0-9]+)/addsong/$', views.add_song, name='add a song'),
+    # url(r'^(?P<room_id>[0-9]+)/playsong/$', views.play_song, name='play a song'),
 ]

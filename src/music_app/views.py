@@ -44,8 +44,7 @@ def home(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
 
 #the main view
-def index(request):
-
+def room(request, room_id):
     videos_returned = []
 
     #get the query element and send it to the search youtube method, then send the results to the array
@@ -58,10 +57,10 @@ def index(request):
           print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
 
 
-        return render_to_response("index2.html", {"response_message": videos_returned})
+        return render_to_response("party_room.html", {"response_message": videos_returned})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "index2.html", {})
+    return render(request, "party_room.html", {})
 
 def newroom(request):
     while True:
@@ -75,29 +74,29 @@ def newroom(request):
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,)))
 
-def room(request, room_id, play_link=''):
-    room = get_object_or_404(Room, room_id=room_id)
-    song_list = room.song_set.order_by('add_time')
-    context = {'room_id': room_id, 'song_list': song_list, 'play_link':play_link}
-    return render(request, 'room.html', context)
+# def room(request, room_id, play_link=''):
+#     room = get_object_or_404(Room, room_id=room_id)
+#     song_list = room.song_set.order_by('add_time')
+#     context = {'room_id': room_id, 'song_list': song_list, 'play_link':play_link}
+#     return render(request, 'index2.html', context)
 
-def play_song(request, party_id):
-    party = get_object_or_404(Party, party_id=party_id)
-    song = party.song_set.all()[0]
-    song.delete()
-    return HttpResponseRedirect(reverse('playlist:detail',kwargs={'party_id':party_id}))
+# def play_song(request, party_id):
+#     party = get_object_or_404(Party, party_id=party_id)
+#     song = party.song_set.all()[0]
+#     song.delete()
+#     return HttpResponseRedirect(reverse('playlist:detail',kwargs={'party_id':party_id}))
 
-def add_song(request, party_id):
-    party = get_object_or_404(Party, party_id=party_id)
-    try:
-        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
-    except :
-        return render(request, 'playlist/detail.html', {
-            'party_id': party_id,
-            'song_list': party.song_set.order_by('add_time'),
-            'error_message': "Invalid Link",
-        })
-    else:
-        new_song.save()
+# def add_song(request, party_id):
+#     party = get_object_or_404(Party, party_id=party_id)
+#     try:
+#         new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+#     except :
+#         return render(request, 'playlist/detail.html', {
+#             'party_id': party_id,
+#             'song_list': party.song_set.order_by('add_time'),
+#             'error_message': "Invalid Link",
+#         })
+#     else:
+#         new_song.save()
 
-        return HttpResponseRedirect(reverse('playlist:detail', args=(party_id,)))
+#         return HttpResponseRedirect(reverse('playlist:detail', args=(party_id,)))
