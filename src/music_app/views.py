@@ -88,6 +88,10 @@ def CheckRoomExists(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
 
 
+def GuestJoinsRoom(request):
+  return render_to_response('index.html', context_instance=RequestContext(request))
+
+
 
 
 
