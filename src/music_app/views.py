@@ -84,17 +84,15 @@ def newroom(request):
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,)))
 
-def CheckRoomExists(request):
+def check_room_exists(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
 
 
-def GuestJoinsRoom(request):
+def guest_joins_room(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
 
-
-
-
-
+def set_song_limit(request):
+  return render_to_response('index.html', context_instance=RequestContext(request))
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
