@@ -84,6 +84,9 @@ def newroom(request):
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,)))
 
+def CheckRoomExists(request):
+  return render_to_response('index.html', context_instance=RequestContext(request))
+
 
 
 
