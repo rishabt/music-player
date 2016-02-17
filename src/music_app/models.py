@@ -24,3 +24,10 @@ class Song(models.Model):
     #print "%s -- %s" % (title, author)
     def __str__(self):
         return self.link
+
+@python_2_unicode_compatible
+class User(models.model):
+    ip_address = models.PositiveIntegerField(max_length=12)
+    songs_added = models.PositiveIntegerField(max_length=3)
+    status = models.CharField(max_length=1
+
