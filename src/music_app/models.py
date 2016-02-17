@@ -9,7 +9,7 @@ from django.utils.encoding import python_2_unicode_compatible
 @python_2_unicode_compatible
 class Room(models.Model):
     room_id = models.IntegerField(max_length=5)
-    song_limit = models.IntegerField(min_value=0)
+    song_limit = models.IntegerField(default=3)
 
     def __str__(self):
         return str(self.room_id)
