@@ -7,7 +7,7 @@ from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 from django.template import RequestContext
 from random import randint
-from music_app.models import Room, Song
+from music_app.models import Room, Song, User
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 
@@ -84,7 +84,7 @@ def newroom(request):
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
-def CheckRoomExists(request):
+def check_room_exists(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
 
 
@@ -110,6 +110,8 @@ def get_client_ip(request):
 
 
 
+def set_song_limit(request):
+  return render_to_response('index.html', context_instance=RequestContext(request))
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
