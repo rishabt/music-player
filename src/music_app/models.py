@@ -25,10 +25,10 @@ class Song(models.Model):
     def __str__(self):
         return self.link
 
-@python_2_unicode_compatible
-class User(models.Model):
-    ip_address = models.PositiveIntegerField(max_length=12)
-    songs_added = models.PositiveIntegerField(max_length=3)
-    status = models.CharField(max_length=1)
-    def __str__(self):
-        return self.ip_address
+#@python_2_unicode_compatible
+#class User(models.Model):
+#   ip_address = models.PositiveIntegerField(max_length=12)
+#  songs_added = models.PositiveIntegerField(max_length=3)
+    # status = models.CharField(max_length=1)
+    # def __str__(self):
+    #     return self.ip_address
