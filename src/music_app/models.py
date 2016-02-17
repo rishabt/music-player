@@ -29,5 +29,4 @@ class Song(models.Model):
 class User(models.model):
     ip_address = models.PositiveIntegerField(max_length=12)
     songs_added = models.PositiveIntegerField(max_length=3)
-    status = models.CharField(max_length=1
-
+    status = models.CharField(max_length=1)
