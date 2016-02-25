@@ -1,18 +1,22 @@
 language: python
 python:
-  - "2.6"
   - "2.7"
 env:
-  - DJANGO=1.8.4
-  #- DJANGO=1.3.1
-  #- DJANGO=1.4
+  - DJANGO=1.9.0
 install:
   - pip install -q Django==$DJANGO --use-mirrors
   - pip install pep8 --use-mirrors
-  - pip install https://github.com/dcramer/pyflakes/tarball/master
-  - pip install -q -e . --use-mirrors
+  - pip install -r requirements.txt 
 before_script:
-  - "pep8 --exclude=migrations --ignore=E501,E225 src"
-  - pyflakes -x W src
+  - cd src 
 script:
-  - python setup.py test
+  python manage.py test
+
+notifications:
+  email:
+    - rishabh.tandon@mail.mcgill.ca
+    - deepak.sharma@mail.mcgill.ca
+    - casimir.desarmeaux@gmail.com
+    - faiz.merchant@mail.mcgill.ca
+    - omar.akkila@mail.mcgill.ca
+    - niloofar.khoshsiyar@mail.mcgill.ca

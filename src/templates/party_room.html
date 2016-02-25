@@ -38,13 +38,14 @@
 		var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
 
 		if (!pattern.test(url)) {
-			html_code = '<iframe id="embeded_video" width="420" height="315" style="background: black;"> </iframe>'
+			html_code = '<iframe id="embeded_video" width="420" height="315" style="background: black; margin-top: 30px;"> </iframe>'
 			$('#embeded_video').html(html_code);
 			alert("Failed to play song. Try again");
 
 		}
 		else {
-			html_code = '<iframe id="embeded_video" width="420" height="315" src=' + link +'> </iframe>'
+			link += "?autoplay=1"
+			html_code = '<iframe id="embeded_video" style="margin-top: 30px;" width="420" height="315" src=' + link +'> </iframe>'
 			$('#embeded_video').html(html_code);
 		}
 	};
@@ -63,12 +64,13 @@
 	<div class="row" style="margin-top: 20px;">
 	<div class="large-3 columns"><br></div>
 	<div class="large-5 columns">
-		<form action="http:{{room}}" class="search-wrapper cf" method="GET">
+		<form action="http:{{room}}" class="search-wrapper" method="GET">
 			<input name="query_element" type="text" placeholder="Search here..." required="" maxlength="100">
 		</form>
 	</div>
 	<div class="large-4 columns">
 		<button type="submit" value="Search">Search</button>
+		<a style="margin-left: 200px;" href="mailto:team_music@ecse428.se"> Contact Us </a>
 	</div>
 	</div>
 
@@ -76,6 +78,7 @@
 	<div class="row">
 	
 	<div class="medium-6 columns">
+	<h5><ins><b> Search Results: </b></ins></h5>
 	{% for link in response_message %}
 		<div class="video_link" style = "display: table; margin-bottom: 20px;">
 			<span>
@@ -88,17 +91,20 @@
  	{% endfor %}
 	</div>
 	
-    <div class="medium-6 columns">
-    <div id="embeded_video"> <iframe id="embeded_video" width="420" height="315" style="background: black;"> </iframe></div>
+    <div class="medium-6 columns" style="border-left: 1px solid black; height: 700px;">
+    <div id="embeded_video" style="text-align: center"> <iframe id="embeded_video" width="420" height="315" style="background: black; margin-top: 30px;"> </iframe></div>
+    <br>
+    <h5 style="text-align: left; margin-left: 100px;"><ins><b> Room Playlist: </b></ins></h5>
     {% if song_list%}
+    <ul class="list-group pull-left" style="width: 550px; margin-left: 30px;">
     {% for link in song_list %}
-    <h4> {{ link.link }}<span><a href = "javascript: embed_video('{{ link.link }}');">   play! </a> </span>  </h4> 
+     <li class="list-group-item" ><h5>{{ link.link }}		<a href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play </a></h5> </li>
     {% endfor %}
+    </ul>
     {% else %}
-    <h4> Add music to the room to start playing </h4>
+    <h5> <a href="#"> Add music to the room to start playing</a> </h5>
     {% endif %}
 	</div>
-
 
 		
     </div>

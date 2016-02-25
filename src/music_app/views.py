@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core import serializers
@@ -7,11 +7,9 @@ from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 from django.template import RequestContext
 from random import randint
-from music_app.models import Room, Song
+from music_app.models import Room, Song, User
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-
-
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
@@ -42,7 +40,7 @@ def home(request):
     return render_to_response('index.html', context_instance=RequestContext(request))
 
 #the main view
-def room(request, room_id):
+def room(request, room_id, client_ip):
     videos_returned = []
     room = get_object_or_404(Room, room_id=room_id)
     song_list = room.song_set.order_by('add_time')
@@ -63,8 +61,8 @@ def room(request, room_id):
     return render(request, "party_room.html", {"song_list": song_list})
 
 def newroom(request):
-
-
+    ip_address = get_client_ip(request)
+    client_ip = ip_address.replace('.','')
     youtube_query = "Deepak"
     videos_returned = []
 
@@ -82,12 +80,45 @@ def newroom(request):
 
     new_room = Room(room_id=id)
     new_room.save()
-    return HttpResponseRedirect(reverse('room', args=(id,)))
+    return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
+
+def check_room_exists(id):
+  return Room.objects.filter(room_id = id).exists()
+
+def guest_joins_room(request):
+
+  #yo Deepak, this has to be changed to the actual room id
+  id = 71971
 
 
+  ip_address = get_client_ip(request)
+  client_ip = ip_address.replace('.','')
+  return HttpResponseRedirect(reverse('room', args=(id,client_ip,)))
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
 
+def Check_Room_Exists(request):
+  response_data = {}
+  response_data['response'] = True
+  if check_room_exists(request.GET['room_id']):
+    return JsonResponse({"RESPONSE" : True})
+  else:
+    return JsonResponse({"RESPONSE" : False})
+    
 
+def RemoveMusic(request):
+  room_id = request.GET['room_id']
+  music
+  return JsonResponse({"RESPONSE" : True})
+
+def set_song_limit(request):
+  return render_to_response('index.html', context_instance=RequestContext(request))
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
