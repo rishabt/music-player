@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core import serializers
@@ -10,8 +10,6 @@ from random import randint
 from music_app.models import Room, Song, User
 from django.utils import timezone
 from django.core.urlresolvers import reverse
-
-
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
@@ -85,8 +83,13 @@ def newroom(request):
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
 def check_room_exists(request):
-  return render_to_response('index.html', context_instance=RequestContext(request))
-
+  id = request.GET['room_id']
+  response_data = {}
+  response_data['response'] = True
+  if Room.objects.filter(room_id = id).exists():
+    return JsonResponse({"RESPONSE" : True})
+  else
+    return JsonResponse({"RESPONSE" : False})
 
 def guest_joins_room(request):
 
