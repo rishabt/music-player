@@ -88,7 +88,7 @@ def check_room_exists(request):
   response_data['response'] = True
   if Room.objects.filter(room_id = id).exists():
     return JsonResponse({"RESPONSE" : True})
-  else
+  else:
     return JsonResponse({"RESPONSE" : False})
 
 def guest_joins_room(request):
