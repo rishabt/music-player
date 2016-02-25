@@ -82,14 +82,8 @@ def newroom(request):
     new_room.save()
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
-def check_room_exists(request):
-  id = request.GET['room_id']
-  response_data = {}
-  response_data['response'] = True
-  if Room.objects.filter(room_id = id).exists():
-    return JsonResponse({"RESPONSE" : True})
-  else:
-    return JsonResponse({"RESPONSE" : False})
+def check_room_exists(id):
+  return Room.objects.filter(room_id = id).exists()
 
 def guest_joins_room(request):
 
@@ -101,8 +95,6 @@ def guest_joins_room(request):
   client_ip = ip_address.replace('.','')
   return HttpResponseRedirect(reverse('room', args=(id,client_ip,)))
 
-
-
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -111,7 +103,18 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def Check_Room_Exists(request):
+  response_data = {}
+  response_data['response'] = True
+  if check_room_exists(request.GET['room_id']):
+    return JsonResponse({"RESPONSE" : True})
+  else:
+    return JsonResponse({"RESPONSE" : False})
+    
 
+
+def RemoveMusic(request):
+  return 
 
 def set_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
