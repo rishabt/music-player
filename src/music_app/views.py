@@ -113,7 +113,9 @@ def Check_Room_Exists(request):
     
 
 def RemoveMusic(request):
-  return JsonResponse({"RESPONSE"} : True)
+  room_id = request.GET['room_id']
+  music
+  return JsonResponse({"RESPONSE" : True})
 
 def set_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
