@@ -86,6 +86,14 @@ def create_host(id):
   user = Client(ip_address = client_ip,songs_added = 0, status = 'H')
   return user
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def newroom(request):
     ip_address = get_client_ip(request)
     client_ip = ip_address.replace('.','')
@@ -108,7 +116,8 @@ def newroom(request):
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
 
-def Guest_Joins_Room(request):
+
+def guest_joins_room(request):
 
   room_id = request.GET['room_id']
   ip_address = get_client_ip(request)
@@ -136,6 +145,7 @@ def Check_Room_Exists(request):
 
 def RemoveMusic(request):
   room_id = request.GET['room_id']
+  music
   return JsonResponse({"RESPONSE" : True})
 
 def set_song_limit(request):
