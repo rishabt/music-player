@@ -15,6 +15,7 @@ from django.core.urlresolvers import reverse
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
+DEFAULT_SONG_LIMIT = 5
 
 #this is not actually a view, just a method that searches youtube and returns video ids
 def youtube_search(the_query, videos):
@@ -60,6 +61,39 @@ def room(request, room_id, client_ip):
     # if the user hasn't entered anything in the search bar, just do nothing
     return render(request, "party_room.html", {"song_list": song_list})
 
+def check_room_exists(id):
+  return Room.objects.filter(room_id = id).exists()
+
+def get_room_with_id(id):
+  return Room.objects.filter(room_id = id)
+
+def create_a_new_room(id,song_limit = DEFAULT_SONG_LIMIT):
+  new_room = Room(room_id = id)
+  new_room.save()
+  return new_room
+
+def check_if_user_exists(id):
+  client_ip = id.replace('.',',')
+  return User.objects.filter(ip_address = client_ip)
+
+def create_user(id):
+  client_ip = id.replace('.',',')
+  user = Client(ip_address = client_ip,songs_added = 0, status = 'G')
+  return user
+
+def create_host(id):
+  client_ip = id.replace('.',',')
+  user = Client(ip_address = client_ip,songs_added = 0, status = 'H')
+  return user
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def newroom(request):
     ip_address = get_client_ip(request)
     client_ip = ip_address.replace('.','')
@@ -78,30 +112,25 @@ def newroom(request):
       else:
         break
 
-    new_room = Room(room_id=id)
-    new_room.save()
+    create_a_new_room(id)
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
-def check_room_exists(id):
-  return Room.objects.filter(room_id = id).exists()
+def Guest_Joins_Room(request):
 
-def guest_joins_room(request):
-
-  #yo Deepak, this has to be changed to the actual room id
-  id = 71971
-
-
+  room_id = request.GET['room_id']
   ip_address = get_client_ip(request)
   client_ip = ip_address.replace('.','')
-  return HttpResponseRedirect(reverse('room', args=(id,client_ip,)))
+  room = {}
+  user = {}
+  if(check_room_exists(room_id)):
+    room = get_room_with_id(room_id)
+    user = create_user(ip_address)
+  else:
+    room = create_a_new_room(room_id)
+    user = create_host(ip_address)
 
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+  # add user to room
+  return HttpResponseRedirect(reverse('room', args=(room_id,client_ip,)))
 
 def Check_Room_Exists(request):
   response_data = {}
