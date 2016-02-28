@@ -80,14 +80,14 @@
                 <label for="right-label" class="right inline">Paty #</label>
               </div>
               <div class="small-9 columns">
-                <button type="number" id="room_id" placeholder="Inline Text Input">Submit</button>
+                <input type="number" id="room_id" placeholder="00000"/>
               </div>
             </div>
           </div>
         </div>
         <div class="row">
             <div class="small-12 columns">
-              <input type="submit" id="guest_room_id" class="button alert right"></input>
+              <button id="submitButton" placeholder="Submit"></button>
             </div>
         </div>
       </form>
@@ -113,7 +113,8 @@
     function createRoom(){
       var createRoom = $("#createRoom");
       var room_id = $("#room_id");
-      room_id.onClick(function(){
+      var submitButton = $("#submitButton");
+      submitButton.onClick(function(){
         createRoom.action = "/room/"+room_id.value();
         createRoom.submit();
       })
