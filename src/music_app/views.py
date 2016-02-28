@@ -78,12 +78,12 @@ def check_if_user_exists(id):
 
 def create_user(id):
   client_ip = id.replace('.',',')
-  user = Client(ip_address = client_ip,songs_added = 0, status = 'G')
+  user = User(ip_address = client_ip,songs_added = 0, status = 'G')
   return user
 
 def create_host(id):
   client_ip = id.replace('.',',')
-  user = Client(ip_address = client_ip,songs_added = 0, status = 'H')
+  user = User(ip_address = client_ip,songs_added = 0, status = 'H')
   return user
 
 def get_client_ip(request):
