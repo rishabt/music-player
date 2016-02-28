@@ -111,13 +111,12 @@
     <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
     <script type="text/javascript">
     function createRoom(){
-      var createRoomForm = $("#createRoom");
       var room_id = $("#room_id");
       var submitButton = $("#submitButton");
-      submitButton.onClick(function(){
-        console.log(room_id);
+      submitButton.click(function(){
         window.location.replace("/room/" + room_id.val());
       })
     }
+    createRoom();
     </script>
 </html>
