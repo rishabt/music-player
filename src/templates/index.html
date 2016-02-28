@@ -72,7 +72,7 @@
     </div>
     <div id="partyIdModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2 id="modalTitle">Enter your party code</h2>
-      <form action="/room/">
+      <form id="createRoom">
         <div class="row">
           <div class="small-8 columns">
             <div class="row">
@@ -80,7 +80,7 @@
                 <label for="right-label" class="right inline">Paty #</label>
               </div>
               <div class="small-9 columns">
-                <input type="number" name="room_id" placeholder="Inline Text Input">
+                <button type="number" id="room_id" placeholder="Inline Text Input">Submit</button>
               </div>
             </div>
           </div>
@@ -109,4 +109,14 @@
     <script src="{% static "js/wow.js" %}"></script>
     <script src="{% static "js/amplify.js" %}"></script>
     <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
+    <script type="text/javascript">
+    function createRoom(){
+      var createRoom = $("#createRoom");
+      var room_id = $("#room_id");
+      room_id.onClick(function(){
+        createRoom.action = "/room/"+room_id.value();
+        createRoom.submit();
+      })
+    }
+    </script>
 </html>

@@ -115,9 +115,8 @@ def newroom(request):
     create_a_new_room(id)
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
-def Guest_Joins_Room(request):
+def Guest_Joins_Room(request,room_id):
 
-  room_id = request.GET['room_id']
   ip_address = get_client_ip(request)
   client_ip = ip_address.replace('.','')
   room = {}
