@@ -10,12 +10,13 @@ from random import randint
 from music_app.models import Room, Song, User
 from django.utils import timezone
 from django.core.urlresolvers import reverse
+from .forms import SongLimitForm
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
-DEFAULT_SONG_LIMIT = 5
+DEFAULT_SONG_LIMIT = 3
 
 #this is not actually a view, just a method that searches youtube and returns video ids
 def youtube_search(the_query, videos):
@@ -38,7 +39,9 @@ def youtube_search(the_query, videos):
 
 
 def home(request):
-    return render_to_response('index.html', context_instance=RequestContext(request))
+    form = SongLimitForm(); # Unpopulated form
+    data_dict = {'form': form}
+    return render_to_response('index.html', data_dict, context_instance=RequestContext(request))
 
 #the main view
 def room(request, room_id, client_ip):
@@ -67,8 +70,8 @@ def check_room_exists(id):
 def get_room_with_id(id):
   return Room.objects.filter(room_id = id)
 
-def create_a_new_room(id,song_limit = DEFAULT_SONG_LIMIT):
-  new_room = Room(room_id = id)
+def create_a_new_room(id,song_lim = DEFAULT_SONG_LIMIT):
+  new_room = Room(room_id = id, song_limit = song_lim)
   new_room.save()
   return new_room
 
@@ -112,7 +115,13 @@ def newroom(request):
       else:
         break
 
-    create_a_new_room(id)
+    limit=DEFAULT_SONG_LIMIT
+    if request.method=='POST':
+      form = SongLimitForm(request.POST)
+      if form.is_valid():
+        limit = request.POST.get('song_limit', '')
+
+    create_a_new_room(id, song_lim=limit)
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
 def Guest_Joins_Room(request):
@@ -139,14 +148,14 @@ def Check_Room_Exists(request):
     return JsonResponse({"RESPONSE" : True})
   else:
     return JsonResponse({"RESPONSE" : False})
-    
+
 
 def RemoveMusic(request):
   room_id = request.GET['room_id']
   music
   return JsonResponse({"RESPONSE" : True})
 
-def set_song_limit(request):
+def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
 
 # def room(request, room_id, play_link=''):

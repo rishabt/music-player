@@ -37,6 +37,34 @@
         }
     });
     </script>
+    <script type="text/javascript">
+        function promptSongLimit() {
+            var f = document.createElement("form");
+            f.setAttribute('method',"post");
+            f.setAttribute('action',"/room/newroom/");
+
+            f.innerHTML = "{% csrf_token %}";
+            f.innerHTML += '{{ form }}';
+
+            var s = document.createElement("input"); //input element, Submit button
+            s.setAttribute('class', "button warning animated big rubberBand _8");
+            s.setAttribute('type',"submit");
+            s.setAttribute('value',"Submit");
+
+            f.appendChild(s);
+
+            document.getElementById('buttons').appendChild(f);
+
+            var form_label = f.getElementsByTagName('label')[0];
+            console.log(form_label);
+            var old_html = form_label.innerHTML;
+            form_label.innerHTML = "<h4 style='color:white !important'>" + old_html + "</h4>"
+
+            // Set the number input field background to white and override any other // style
+            var element = document.getElementById('id_song_limit');
+            element.setAttribute('style', 'background-color:white !important');
+        };
+    </script>
   </head>
   <body>
 	<div class="fixed">
@@ -47,9 +75,9 @@
     				<span class="orangex ng-binding">Bieber Player</span> <span class="dim ng-binding"></span>
     			</h1>
     		</section>
-    		<section class="right-small">  
-                <a style="margin-left: -50px;" href="mailto:team_music@ecse428.se"> 
-                    Contact Us 
+    		<section class="right-small">
+                <a style="margin-left: -50px;" href="mailto:team_music@ecse428.se">
+                    Contact Us
                 </a>
             </section>
     	</nav>
@@ -66,7 +94,7 @@
     	</div>
 	</div>
   	<div class="animated-page-hero ng-scope">
-            {% load staticfiles %} 
+            {% load staticfiles %}
             <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-large-up animated fadeInDown">
             <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-medium-only animated fadeInDown">
             <img src="{% static "img/NYC2.jpg" %}" alt="" class="big-hero-img show-for-small-only animated fadeInDown">
@@ -77,15 +105,15 @@
                             <h1 class="animated fadeInUp _1 "><span class="orangeX">Team</span> Music</h1>
                             <hr class="animated fadeInUp _2">
                             <h3 class="sub-hero show-for-large-upx animated fadeInDown _3">Host your own party</h3> <br>
-                            <div class="animated fadeInDown _4">
-                                <a class="button warning animated big rubberBand _8" href="/room/newroom">
+                            <div class="animated fadeInDown _4" id="buttons">
+                                <a class="button warning animated big rubberBand _8" href="javascript:promptSongLimit();">
                                     Create new room
                                 </a>
-                                <a class="button warning animated big rubberBand _8" href="/room/guest_joins_room">         Enter a Party    
+                                <a class="button warning animated big rubberBand _8" href="/room/guest_joins_room">         Enter a Party
                                 </a>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
     </div>
