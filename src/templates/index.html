@@ -11,18 +11,6 @@
     <link rel="stylesheet" href="{% static "css/normalize.css" %}" >
     <link rel="stylesheet" href="{% static "css/slick.css" %}" >
     <link rel="stylesheet" href="{% static "css/main.css" %}" >
-    <script src="{% static "js/angular.min.js" %}"></script>
-    <script src="{% static "js/vendor/modernizr.js" %}"></script>
-    <script src="{% static "js/vendor/jquery.js" %}"></script>
-    <script src="{% static "js/vendor/placeholder.js" %}"></script>
-    <script src="{% static "js/foundation.min.js" %}"></script>
-    <script src="{% static "js/foundation/foundation.topbar.js" %}"></script>
-    <script>$(document).foundation();</script>
-    <script src="{% static "js/moment.js" %}"></script>
-    <script src="{% static "js/slick.min.js" %}"></script>
-    <script src="{% static "js/wow.js" %}"></script>
-    <script src="{% static "js/amplify.js" %}"></script>
-    <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
     <style type="text/css">
     .bg{
     	max-width: 100%;
@@ -30,13 +18,6 @@
     	width: auto\9; /* ie8 */
     }
     </style>
-    <script type="text/javascript">
-     $( document ).ready(function() {
-        if ({{error_message}}) {
-            alert("Server under high load, try again later");
-        }
-    });
-    </script>
   </head>
   <body>
 	<div class="fixed">
@@ -44,7 +25,7 @@
     	<nav class="tab-bar df-tab-bar hide-for-large-upx stickyx">
     		<section class="left tab-bar-section">
     			<h1 class="title">
-    				<span class="orangex ng-binding">Bieber Player</span> <span class="dim ng-binding"></span>
+    				<span class="orangex ng-binding">Bieber Player</span> <span class="dim"></span>
     			</h1>
     		</section>
     		<section class="right-small">  
@@ -81,7 +62,7 @@
                                 <a class="button warning animated big rubberBand _8" href="/room/newroom">
                                     Create new room
                                 </a>
-                                <a class="button warning animated big rubberBand _8" href="/room/guest_joins_room">         Enter a Party    
+                                <a class="button warning animated big rubberBand _8" href="#" data-reveal-id="partyIdModal">         Enter a Party    
                                 </a>
                             </div>
                         </div>
@@ -89,25 +70,53 @@
                 </div>
             </div>
     </div>
-    <div class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Modal title</h4>
+    <div id="partyIdModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+      <h2 id="modalTitle">Enter your party code</h2>
+        <form id="createRoomForm">
+          <div class="row">
+            <div class="small-8 columns">
+              <div class="row">
+                <div class="small-3 columns">
+                  <label for="right-label" class="right inline">Party #</label>
+                </div>
+                <div class="small-9 columns">
+                  <input type="number" id="room_id" placeholder="00000"/>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="modal-body">
-            <p>One fine body&hellip;</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        </form>
+        <div class="row">
+            <div class="small-12 columns">
+              <button id="submitButton" class = "button alert right" placeholder="Submit">Submit</button>
+            </div>
+        </div>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
 
   </body>
-
-
+  <script src="{% static "js/vendor/modernizr.js" %}"></script>
+  <script src="{% static "js/vendor/jquery.js" %}"></script>
+  <script src="{% static "js/vendor/placeholder.js" %}"></script>
+    <script src="{% static "js/foundation.min.js" %}"></script>
+    <script src="{% static "js/foundation/foundation.topbar.js" %}"></script>
+    <script src="{% static "js/foundation/foundation.reveal.js" %}"></script>
+    <script type="text/javascript"> 
+        $(document).foundation();
+    </script>    
+    <script src="{% static "js/moment.js" %}"></script>
+    <script src="{% static "js/slick.min.js" %}"></script>
+    <script src="{% static "js/wow.js" %}"></script>
+    <script src="{% static "js/amplify.js" %}"></script>
+    <script src="{% static "js/MobileServices.Web-1.2.2.min.js" %}"></script>
+    <script type="text/javascript">
+    function createRoom(){
+      var room_id = $("#room_id");
+      var submitButton = $("#submitButton");
+      submitButton.click(function(){
+        window.location.replace("/room/" + room_id.val());
+      })
+    }
+    createRoom();
+    </script>
 </html>
