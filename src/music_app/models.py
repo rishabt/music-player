@@ -19,6 +19,7 @@ class Song(models.Model):
     link = models.CharField(max_length=44)
     add_time = models.DateTimeField("time song was added")
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    queueIdx = models.AutoIncrement()
     #user_ip = models.CharField(max_length=45)
 
     #print "%s -- %s" % (title, author)
