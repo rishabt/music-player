@@ -97,6 +97,9 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+def getSongWithRoomAndLink(room_id,song_link):
+    return Song.objects.filter(room__room_id = room_id, link = song_link)
+
 def newroom(request):
     ip_address = get_client_ip(request)
     client_ip = ip_address.replace('.','')
@@ -149,10 +152,13 @@ def Check_Room_Exists(request):
     return JsonResponse({"RESPONSE" : False})
 
 
-def RemoveMusic(request):
-  room_id = request.GET['room_id']
-  music
-  return JsonResponse({"RESPONSE" : True})
+def RemoveMusic(request, room_id, song_link):
+  song = getSongWithRoomAndLink(room_id, song_link)
+  ip_address = get_client_ip(request)
+  client_ip = ip_address.replace('.','')
+  song.delete()
+  return HttpResponseRedirect(reverse('room',args=(room_id,client_ip)))
+
 
 def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
