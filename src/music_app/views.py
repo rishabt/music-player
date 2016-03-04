@@ -11,6 +11,7 @@ from music_app.models import Room, Song, User
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
+from django.contrib import messages
 
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
@@ -187,11 +188,6 @@ def get_song_limit(request):
 
 def add_song(request, room_id, client_ip):
     party = get_object_or_404(Room, room_id=room_id)
-#the commented out section below checks if user has reached song limit.
-#But it requires changes to the model which we have to discuss
-#for now, all songs will be added
-
-
     user = get_object_or_404(User, ip_address=client_ip)
 
     if user.status=="H":
@@ -209,6 +205,7 @@ def add_song(request, room_id, client_ip):
     else:
         msg = "Song limit reached"
 
+    messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
 # def room(request, room_id, play_link=''):

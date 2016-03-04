@@ -50,6 +50,7 @@
       </nav>
     </header>
     <div id="results">
+    	{% if messages %}{% for message in messages %}<p><strong><center>{{ message }}</center></strong></p>{% endfor %}{% endif %}
       	{% for link in response_message %}
 		<div class="video_link" style = "display: table; margin-bottom: 20px;">
 			<span>
