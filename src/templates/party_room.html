@@ -56,7 +56,12 @@
 				<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
 			</span>
 			<span style = "vertical-align:middle; display: table-cell;">
-				<a  href="#"> {{ link.0 }} </a>
+				{{ link.0 }}
+				<form action="{% url 'addsong' room_id client_ip %}" method="post">
+				{% csrf_token %}
+					<input type="hidden" value="{{link.1}}" name="link">
+					<input type="submit" value="Add Song">
+				</form>
 			</span> 
 		</div>
  	{% endfor %}

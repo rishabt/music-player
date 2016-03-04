@@ -31,4 +31,4 @@ class User(models.Model):
     songs_added = models.PositiveIntegerField(max_length=3)
     status = models.CharField(max_length=1)
     def __str__(self):
-        return self.ip_address
+        return str(self.ip_address)

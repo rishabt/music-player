@@ -59,7 +59,7 @@ def room(request, room_id, client_ip):
           print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
 
 
-        return render_to_response("party_room.html", {"response_message": videos_returned, "song_list": song_list})
+        return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
     # if the user hasn't entered anything in the search bar, just do nothing
     return render(request, "party_room.html", {"song_list": song_list})
@@ -76,18 +76,39 @@ def create_a_new_room(id,song_lim = DEFAULT_SONG_LIMIT):
   return new_room
 
 def check_if_user_exists(id):
-  client_ip = id.replace('.',',')
+  client_ip = id.replace('.','')
   return User.objects.filter(ip_address = client_ip)
 
 def create_user(id):
-  client_ip = id.replace('.',',')
-  user = User(ip_address = client_ip,songs_added = 0, status = 'G')
-  return user
+    client_ip = id.replace('.','')
+
+    if User.objects.filter(ip_address=client_ip).exists():
+
+        user = User.objects.get(ip_address=client_ip)
+        user.songs_added = 0
+        user.status = "G"
+        user.save()
+
+    else:
+        user = User(ip_address = client_ip,songs_added = 0, status = 'G')
+        user.save()
+
+    return user
 
 def create_host(id):
-  client_ip = id.replace('.',',')
-  user = User(ip_address = client_ip,songs_added = 0, status = 'H')
-  return user
+    client_ip = id.replace('.','')
+    if User.objects.filter(ip_address=client_ip).exists():
+
+        user = User.objects.get(ip_address=client_ip)
+        user.songs_added = 0
+        user.status = "H"
+        user.save()
+
+    else:
+        user = User(ip_address = client_ip,songs_added = 0, status = 'H')
+        user.save()
+
+    return user
 
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -125,6 +146,7 @@ def newroom(request):
         limit = request.POST.get('song_limit', '')
 
     create_a_new_room(id, song_lim=limit)
+    user = create_host(ip_address)
     return HttpResponseRedirect(reverse('room', args=(id,client_ip)))
 
 def Guest_Joins_Room(request,room_id):
@@ -162,6 +184,32 @@ def RemoveMusic(request, room_id, song_link):
 
 def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
+
+def add_song(request, room_id, client_ip):
+    party = get_object_or_404(Room, room_id=room_id)
+#the commented out section below checks if user has reached song limit.
+#But it requires changes to the model which we have to discuss
+#for now, all songs will be added
+
+
+    user = get_object_or_404(User, ip_address=client_ip)
+
+    if user.status=="H":
+        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+        new_song.save()
+        msg = "Song Added"
+
+    elif (user.songs_added<party.song_limit):
+        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+        new_song.save()
+        user.songs_added += 1
+        user.save()
+        msg = "Song Added"
+
+    else:
+        msg = "Song limit reached"
+
+    return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
