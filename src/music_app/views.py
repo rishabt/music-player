@@ -82,8 +82,7 @@ def check_if_user_exists(id):
 
 # Returns User status
 def check_user_status(id):
-  client_ip = id.replace('.','')
-  user = User.objects.filter(ip_address = client_ip)
+  user = get_object_or_404(User, ip_address=id)
   return user.status
 
 def create_user(id):
@@ -190,7 +189,8 @@ def RemoveMusic(request, room_id, song_link):
 
 def IdentifyUserView(request):
   ip_address = get_client_ip(request)
-  status = check_user_status(ip_address)
+  client_ip = ip_address.replace('.','')
+  status = check_user_status(client_ip)
   return JsonResponse({"STATUS" : status})
 
 def get_song_limit(request):
