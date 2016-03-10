@@ -159,7 +159,7 @@
 		return pattern.exec(path);
 	}
 
-	function(){
+	(function(){
 		// Check user status
 		$.get('/room/user/status')
 		.then(function(success){
@@ -170,7 +170,7 @@
 				removeMusic();
 			}
 		});
-	}();
+	})();
 </script>
 
 </html>
