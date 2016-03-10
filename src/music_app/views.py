@@ -63,7 +63,7 @@ def room(request, room_id, client_ip):
         return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "party_room.html", {"song_list": song_list})
+    return render(request, "party_room.html",  {"song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
 def check_room_exists(id):
   return Room.objects.filter(room_id = id).exists()
