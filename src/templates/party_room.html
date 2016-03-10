@@ -78,8 +78,8 @@
      	<h5><span id="songLink{{forloop.counter0}}">{{link.link}}</span>
      		<a class = "playButton" href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">Play 
      		</a>
-     		<button class="pull-right" class="removeButton" style="border-left: 1px solid black">Remove 
-     		</button>
+     		<a class="pull-right" class="removeButton" href="/room/{{room_id}}/{{link.link}}" style="border-left: 1px solid black">Remove 
+     		</a>
      	</h5> 
      </li>
     {% endfor %}
@@ -143,12 +143,12 @@
 </body>
 <script type="text/javascript">
 
-	function removeMusic(){
+	function addRemoveMusicListener(){
       var removeButton = $(".removeButton");
       removeButton.click(function(){
       	var link = $(this).parent().find("span").val();
       	var room_id = getRoomId();
-       	$.post('/room/'+room_id+'link'+);
+       	$.post('/room/'+room_id+'link'+link);
         //window.location.replace("/room/" + room_id.val());
       })
     }
@@ -167,7 +167,7 @@
 				$(".playButton").hide();
 				$(".removeButton").hide();
 			}else{
-				removeMusic();
+				addRemoveMusicListener();
 			}
 		});
 	})();
