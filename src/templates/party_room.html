@@ -75,11 +75,11 @@
     <ul class="list-group pull-left" style="width: 550px; margin-left: 30px;">
     {% for link in song_list %}
      <li class="list-group-item" >
-     	<h5><span id="songLink{{forloop.counter0}}">{{link.link}}</span>{{ link.link }}		
-     		<a class = "playButton" href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play 
+     	<h5><span id="songLink{{forloop.counter0}}">{{link.link}}</span>
+     		<a class = "playButton" href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">Play 
      		</a>
-     		<a class="pull-right" class="removeButton" style="border-left: 1px solid black">  &nbsp; remove 
-     		</a>
+     		<button class="pull-right" class="removeButton" style="border-left: 1px solid black">Remove 
+     		</button>
      	</h5> 
      </li>
     {% endfor %}
@@ -148,7 +148,7 @@
       removeButton.click(function(){
       	var link = $(this).parent().find("span").val();
       	var room_id = getRoomId();
-       	$.post('/room/'+room_id+'link');
+       	$.post('/room/'+room_id+'link'+);
         //window.location.replace("/room/" + room_id.val());
       })
     }
