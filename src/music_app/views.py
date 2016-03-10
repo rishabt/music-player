@@ -80,6 +80,12 @@ def check_if_user_exists(id):
   client_ip = id.replace('.','')
   return User.objects.filter(ip_address = client_ip)
 
+# Returns User status
+def check_user_status(id):
+  client_ip = id.replace('.','')
+  user = User.objects.filter(ip_address = client_ip)
+  return user.status
+
 def create_user(id):
     client_ip = id.replace('.','')
 
@@ -182,6 +188,10 @@ def RemoveMusic(request, room_id, song_link):
   song.delete()
   return HttpResponseRedirect(reverse('room',args=(room_id,client_ip)))
 
+def IdentifyUser(request):
+  ip_address = get_client_ip(request)
+  status = check_user_status(ip_address)
+  return JsonResponse("STATUS" : status)
 
 def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))

@@ -74,7 +74,14 @@
         {% if song_list%}
     <ul class="list-group pull-left" style="width: 550px; margin-left: 30px;">
     {% for link in song_list %}
-     <li class="list-group-item" ><h5>{{ link.link }}		<a href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play </a></h5> </li>
+     <li class="list-group-item" >
+     	<h5><span id="songLink{{forloop.counter0}}">{{link.link}}</span>{{ link.link }}		
+     		<a class = "playButton" href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play 
+     		</a>
+     		<a class="pull-right" class="removeButton" style="border-left: 1px solid black">  &nbsp; remove 
+     		</a>
+     	</h5> 
+     </li>
     {% endfor %}
     </ul>
     {% else %}
@@ -134,5 +141,34 @@
 
 	
 </body>
+<script type="text/javascript">
+
+	function removeMusic(){
+      var removeButton = $(".removeButton");
+      removeButton.click(function(){
+      	var link = $(this).parent().find("span").val();
+      	var room_id = getRoomId();
+       	$.post('/room/'+room_id+'link');
+        //window.location.replace("/room/" + room_id.val());
+      })
+    }
+
+	function getRoomId(){
+		var pattern = /\d+/g;
+		var path = window.location.pathname;
+		return pattern.exec(path);
+	}
+	
+	function deactivePlayButtonsForGuests(){
+		// Check user status
+		var status = $.get('/room/user/status');
+		if(status.status == "G"){
+			$(".playButton").hide();
+		}else{
+			removeMusic();
+		}
+	}
+    deactivePlayButtonsForGuests();
+</script>
 
 </html>

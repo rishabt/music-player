@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^newroom/$', views.newroom, name='create a room'),
     url(r'^(?P<room_id>[0-9]+)/$', views.Guest_Joins_Room, name='join a room'),
     url(r'^(?P<room_id>[0-9]+)/(?P<song_link>)/$',views.RemoveMusic, name='remove song'),
+    url(r'^user/status$', views.IdentifyUserView, name='Identify User'),
     url(r'^(?P<room_id>[0-9]+)/(?P<client_ip>[0-9]+)/addsong/$', views.add_song, name='addsong'),
     # url(r'^(?P<room_id>[0-9]+)/addsong/$', views.add_song, name='add a song'),
     # url(r'^(?P<room_id>[0-9]+)/playsong/$', views.play_song, name='play a song'),
