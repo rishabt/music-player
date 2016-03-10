@@ -99,6 +99,8 @@
                                 </a>
                                 <a class="button warning animated big rubberBand _8" href="#" data-reveal-id="partyIdModal">         Enter a Party
                                 </a>
+                                {% if messages %}{% for message in messages %}<!--<p><strong><center>{{ message }}</center></strong></p>-->                                <script type="text/javascript">alert('{{ message }}')</script>
+                                {% endfor %}{% endif %}
                             </div>
                         </div>
                     </div>

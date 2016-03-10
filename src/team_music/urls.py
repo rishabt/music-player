@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'^$', 'music_app.views.home'),
+    url(r'^$', 'music_app.views.home', name="home"),
     url(r'^admin/', admin.site.urls),
     url(r'^room/', include('music_app.urls')),
 ]

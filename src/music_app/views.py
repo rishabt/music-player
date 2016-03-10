@@ -60,13 +60,11 @@ def room(request, room_id, client_ip):
           print "An HTTP error %d occurred:\n%s" % (e.resp.status, e.content)
 
 
+
         return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
     # if the user hasn't entered anything in the search bar, just do nothing
     return render(request, "party_room.html",  {"song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
-
-def check_room_exists(id):
-  return Room.objects.filter(room_id = id).exists()
 
 def get_room_with_id(id):
   return Room.objects.filter(room_id = id)
@@ -165,8 +163,8 @@ def Guest_Joins_Room(request,room_id):
     room = get_room_with_id(room_id)
     user = create_user(ip_address)
   else:
-    room = create_a_new_room(room_id)
-    user = create_host(ip_address)
+    messages.add_message(request, messages.INFO, "Room not found")
+    return HttpResponseRedirect(reverse('home'))
 
   # add user to room
   return HttpResponseRedirect(reverse('room', args=(room_id,client_ip,)))
