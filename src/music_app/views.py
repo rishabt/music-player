@@ -188,7 +188,7 @@ def RemoveMusic(request, room_id, song_link):
   song.delete()
   return HttpResponseRedirect(reverse('room',args=(room_id,client_ip)))
 
-def IdentifyUser(request):
+def IdentifyUserView(request):
   ip_address = get_client_ip(request)
   status = check_user_status(ip_address)
   return JsonResponse({"STATUS" : status})
