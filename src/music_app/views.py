@@ -191,7 +191,7 @@ def RemoveMusic(request, room_id, song_link):
 def IdentifyUser(request):
   ip_address = get_client_ip(request)
   status = check_user_status(ip_address)
-  return JsonResponse("STATUS" : status)
+  return JsonResponse({"STATUS" : status})
 
 def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
