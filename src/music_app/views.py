@@ -74,6 +74,9 @@ def create_a_new_room(id,song_lim = DEFAULT_SONG_LIMIT):
   new_room.save()
   return new_room
 
+def check_room_exists(id):
+  return Room.objects.filter(room_id = id).exists()
+
 def check_if_user_exists(id):
   client_ip = id.replace('.','')
   return User.objects.filter(ip_address = client_ip)
@@ -82,6 +85,7 @@ def check_if_user_exists(id):
 def check_user_status(id):
   user = get_object_or_404(User, ip_address=id)
   return user.status
+
 
 def create_user(id):
     client_ip = id.replace('.','')
