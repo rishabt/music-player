@@ -78,7 +78,7 @@
      	<h5><span id="songLink{{forloop.counter0}}">{{link.link}}</span>
      		<a class = "playButton" href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">Play 
      		</a>
-     		<a class="pull-right" class="removeButton" href="{% url 'removeSong' room_id link.link %}" style="border-left: 1px solid black">Remove 
+     		<a class="pull-right" class="removeButton" href="/room/{{ room_id }}/{{ link.link }}" style="border-left: 1px solid black">Remove 
      		</a>
      	</h5> 
      </li>
