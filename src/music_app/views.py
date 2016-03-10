@@ -180,7 +180,8 @@ def Check_Room_Exists(request):
     return JsonResponse({"RESPONSE" : False})
 
 
-def RemoveMusic(request, room_id, song_link):
+def RemoveMusic(request, room_id):
+  song_link = request.POST['link']
   song = getSongWithRoomAndLink(room_id, song_link)
   ip_address = get_client_ip(request)
   client_ip = ip_address.replace('.','')
