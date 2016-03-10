@@ -158,17 +158,19 @@
 		var path = window.location.pathname;
 		return pattern.exec(path);
 	}
-	
-	function deactivePlayButtonsForGuests(){
+
+	function(){
 		// Check user status
-		var status = $.get('/room/user/status');
-		if(status.status == "G"){
-			$(".playButton").hide();
-		}else{
-			removeMusic();
-		}
-	}
-    deactivePlayButtonsForGuests();
+		$.get('/room/user/status')
+		.then(function(success){
+			if(success.STATUS == "G"){
+				$(".playButton").hide();
+				$(".removeButton").hide();
+			}else{
+				removeMusic();
+			}
+		});
+	}();
 </script>
 
 </html>
