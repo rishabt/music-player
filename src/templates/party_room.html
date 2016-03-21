@@ -41,7 +41,19 @@
 	};
 
 	$(document).ready(function(){
-    show_upcoming();
+    	show_upcoming();
+    	$('#replay-button').on("click", function(){
+    		if($('#replay-button').hasClass('selected')){
+    			$('#replay-button').css('background', 'none');
+    			$('#replay-button').css('color', '#1B2B83');
+    			$('#replay-button').removeClass('selected');
+    		}
+    		else {
+    			$('#replay-button').addClass('selected');
+    			$('#replay-button').css('background-color', '#1171A2');
+    			$('#replay-button').css('color', 'white');
+    		}
+		});
 	});
 
 
@@ -85,6 +97,7 @@
     </div>
     <div id="playlist">
         {% if song_list%}
+        <p id="replay-button"> Replay</p>
         <p id="current">"Insert name of video playing here"</p>
       	<ol id="upcoming">
       	{% for link in song_list %}

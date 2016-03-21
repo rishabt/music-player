@@ -39,7 +39,9 @@ nav{ float: right; line-height: 40px; text-align: center; width: 240px;}
 #player{ background: black;}
 
 #playlist{ background: #EDECE8; color: #727785; font-size: 16px; height: 464px; overflow-x: hidden; top: 440px; width: 640px;}
-#current{ color: black; font-size: 20px; padding: 20px;}
+#current{ color: black; font-size: 20px; padding: 20px; margin-right: 80px;}
+#replay-button{ background: none; color: #1B2B83; margin-top: 1px; float: right; text-align: center; padding: 20px 0; width: 80px; cursor: pointer;}
+.selected {}
 #playlist ol,
 #playlist ol{ border-bottom: 1px solid #33363f; height: 340px; overflow-x: hidden;}
 #playlist li{ border-top: 1px solid #33363f;}

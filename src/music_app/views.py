@@ -221,6 +221,9 @@ def add_song(request, room_id, client_ip):
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
+def check_song_in_queue(request):
+  return render_to_response('index.html', {})
+
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
     # song_list = room.song_set.order_by('add_time')
