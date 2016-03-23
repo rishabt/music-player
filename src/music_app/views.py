@@ -129,6 +129,10 @@ def get_client_ip(request):
 def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
 
+def addSongToHistory(song,party):
+    new_song = party.history_set.create(link=song, add_time=timezone.now())
+    new_song.save()
+
 def newroom(request):
     ip_address = get_client_ip(request)
     client_ip = ip_address.replace('.','')
@@ -220,6 +224,13 @@ def add_song(request, room_id, client_ip):
 
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
+
+def PlaySong(request, room_id):
+  party = get_object_or_404(Room, room_id=room_id)
+  song = request.POST['link']
+  addSongToHistory(song,party)
+  msg = "Song Added To History"
+  messages.add_message(request, messages.INFO, msg)
 
 def check_song_in_queue(request):
   return render_to_response('index.html', {})
