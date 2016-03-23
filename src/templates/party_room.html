@@ -75,7 +75,14 @@
     var dups_allowed = localStorage.getItem("dups_allowed");
     setDuplicates(dups_allowed);
 
-
+    $.ajax({
+      type: "GET",
+      url: '/room/' + room_id + '/history/',
+      success: function(success){
+        console.log(success);
+      }    
+    });
+    
     	show_upcoming();
     	$('#replay-button').on("click", function(){
     		if($('#replay-button').hasClass('selected')){

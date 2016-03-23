@@ -238,7 +238,7 @@ def PlaySongView(request, room_id):
   messages.add_message(request, messages.INFO, msg)
   return JsonResponse({'RESPONSE': song + 'Added successfully'})
 
-def get_history(room_id):
+def GetHistoryView(request,room_id):
  return History.objects.filter(history__room_id = room_id)
 
 def check_song_in_queue(request):
