@@ -11,7 +11,7 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script>
 	  
-	function embed_video(link) {
+	function embed_video(link,room_id) {
 		var url = link;
 		var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
 		if (!pattern.test(url)) {
@@ -24,6 +24,18 @@
 			html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
 			$('#player').html(html_code);
 		}
+
+
+    $.ajax({
+      type: "POST",
+      url: '/room/' + room_id + '/playsong/',
+      data: {
+        link: link
+      },
+      success: function(success){
+        console.log(success.data);
+      }    
+    });
 	};
 
 	function show_upcoming() {
@@ -107,7 +119,7 @@
 					<input type="hidden" value="{{link.link}}" name="link">
 					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
 			</form>
-			  <a class = "item-play playButton" href = "javascript: embed_video('{{ link.link }}');"> Play 
+			  <a class = "item-play playButton" href = "javascript: embed_video('{{ link.link }}','{{ room_id }}');"> Play 
      		</a>
       		<p class="item-title">{{link.link}}</p>
       	</li>

@@ -231,6 +231,7 @@ def PlaySong(request, room_id):
   addSongToHistory(song,party)
   msg = "Song Added To History"
   messages.add_message(request, messages.INFO, msg)
+  return JsonResponse({'RESPONSE': song + 'Added successfully'})
 
 def check_song_in_queue(request):
   return render_to_response('index.html', {})
