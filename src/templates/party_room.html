@@ -28,7 +28,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/room/' + room_id + '/playsong/',
+      url: '/room/' + '{{ room_id }}' + '/playsong/',
       data: {
         link: link
       },
@@ -77,12 +77,12 @@
 
     $.ajax({
       type: "GET",
-      url: '/room/' + room_id + '/history/',
+      url: '/room/' + '{{ room_id }}}' + '/history/',
       success: function(success){
         console.log(success);
       }    
     });
-    
+
     	show_upcoming();
     	$('#replay-button').on("click", function(){
     		if($('#replay-button').hasClass('selected')){
