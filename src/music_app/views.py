@@ -229,18 +229,7 @@ def add_song(request, room_id, client_ip):
 
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
-
-<<<<<<< Updated upstream
-=======
-def check_song_in_queue(request, room_id):
-  song_link = request.POST['link']
-  song = getSongWithRoomAndLink(room_id, song_link)
-  if not song:
-    return 0
-  else:
-    return 1
   
->>>>>>> Stashed changes
 def PlaySongView(request, room_id):
   party = get_object_or_404(Room, room_id=room_id)
   song = request.POST['link']
