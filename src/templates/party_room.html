@@ -52,7 +52,30 @@
 		$('#upcoming').hide();
 	};
 
+
+  function setDuplicates(status) {
+    if(status == 0) {
+      localStorage.setItem("dups_allowed", "0");
+      $('#duplicates_allowed').val("0");
+      $('#duplicate-button').css('background', 'none');
+      $('#duplicate-button').css('color', '#1B2B83');
+      $('#duplicate-button').removeClass('dip_selected');
+    }
+    else {
+      localStorage.setItem("dups_allowed", "1");
+      $('#duplicates_allowed').val("1");
+      $('#duplicate-button').addClass('dip_selected');
+      $('#duplicate-button').css('background-color', '#1171A2');
+      $('#duplicate-button').css('color', 'white');
+    }
+  };
+
 	$(document).ready(function(){
+
+    var dups_allowed = localStorage.getItem("dups_allowed");
+    setDuplicates(dups_allowed);
+
+
     	show_upcoming();
     	$('#replay-button').on("click", function(){
     		if($('#replay-button').hasClass('selected')){
@@ -66,6 +89,14 @@
     			$('#replay-button').css('color', 'white');
     		}
 		});
+      $('#duplicate-button').on("click", function(){
+        if($('#duplicate-button').hasClass('dip_selected')){
+          setDuplicates(0);
+        }
+        else {
+          setDuplicates(1);
+        }
+    });
 	});
 
 
@@ -98,6 +129,7 @@
 				<form action="{% url 'addsong' room_id client_ip %}" method="post">
 				{% csrf_token %}
 					<input type="hidden" value="{{link.1}}" name="link">
+          <input id="duplicates_allowed" type="hidden" value="0" name="dups">
 					<input type="submit" value="Add Song">
 				</form>
 			</span> 
@@ -109,6 +141,7 @@
     </div>
     <div id="playlist">
         {% if song_list%}
+        <p id="duplicate-button"> Duplicates</p>
         <p id="replay-button"> Replay</p>
         <p id="current">"Insert name of video playing here"</p>
       	<ol id="upcoming">
@@ -165,6 +198,8 @@
 			if(success.STATUS == "G"){
 				$(".playButton").hide();
 				$(".removeButton").hide();
+        $("#duplicate-button").hide();
+        $("#replay-button").hide();
 			}else{
 				addRemoveMusicListener();
 			}
