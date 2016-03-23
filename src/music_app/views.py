@@ -202,27 +202,38 @@ def get_song_limit(request):
 def add_song(request, room_id, client_ip):
     party = get_object_or_404(Room, room_id=room_id)
     user = get_object_or_404(User, ip_address=client_ip)
+    msg = ""
+    dups = int(request.POST['dups'])
 
-    if user.status=="H":
-        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
-        new_song.save()
-        msg = "Song Added"
+    if ((dups ==1) or (check_song_in_queue(request, room_id) == 0)):
+      if user.status=="H":
+          new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+          new_song.save()
+          msg = "Song Added"
 
-    elif (user.songs_added<party.song_limit):
-        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
-        new_song.save()
-        user.songs_added += 1
-        user.save()
-        msg = "Song Added"
+      elif (user.songs_added<party.song_limit):
+          new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+          new_song.save()
+          user.songs_added += 1
+          user.save()
+          msg = "Song Added"
 
+      else:
+          msg = "Song limit reached"
     else:
-        msg = "Song limit reached"
+      msg = "Song already in queue bro"
 
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
-def check_song_in_queue(request):
-  return render_to_response('index.html', {})
+def check_song_in_queue(request, room_id):
+  song_link = request.POST['link']
+  song = getSongWithRoomAndLink(room_id, song_link)
+  if not song:
+    return 0
+  else:
+    return 1
+  
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
