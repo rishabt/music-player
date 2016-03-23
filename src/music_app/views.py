@@ -240,8 +240,8 @@ def PlaySongView(request, room_id):
 
 def GetHistoryView(request,room_id):
   room = get_object_or_404(Room, room_id=room_id)
-  return room.history_set
-
+  history_list = room.history_set
+  return JsonResponse({'history': history_list})
 
 def check_song_in_queue(request):
   return render_to_response('index.html', {})
