@@ -239,7 +239,9 @@ def PlaySongView(request, room_id):
   return JsonResponse({'RESPONSE': song + 'Added successfully'})
 
 def GetHistoryView(request,room_id):
- return History.objects.filter(room_id = room_id)
+  room = get_object_or_404(Room, room_id=room_id)
+  return room.history_set
+
 
 def check_song_in_queue(request):
   return render_to_response('index.html', {})
