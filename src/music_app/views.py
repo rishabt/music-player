@@ -225,7 +225,7 @@ def add_song(request, room_id, client_ip):
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
-def PlaySong(request, room_id):
+def PlaySongView(request, room_id):
   party = get_object_or_404(Room, room_id=room_id)
   song = request.POST['link']
   addSongToHistory(song,party)
