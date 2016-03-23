@@ -7,7 +7,7 @@ from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 from django.template import RequestContext
 from random import randint
-from music_app.models import Room, Song, User
+from music_app.models import Room, Song, User, History
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
@@ -230,6 +230,17 @@ def add_song(request, room_id, client_ip):
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
 
+<<<<<<< Updated upstream
+=======
+def check_song_in_queue(request, room_id):
+  song_link = request.POST['link']
+  song = getSongWithRoomAndLink(room_id, song_link)
+  if not song:
+    return 0
+  else:
+    return 1
+  
+>>>>>>> Stashed changes
 def PlaySongView(request, room_id):
   party = get_object_or_404(Room, room_id=room_id)
   song = request.POST['link']
@@ -237,6 +248,9 @@ def PlaySongView(request, room_id):
   msg = "Song Added To History"
   messages.add_message(request, messages.INFO, msg)
   return JsonResponse({'RESPONSE': song + 'Added successfully'})
+
+def get_history(room_id):
+ return History.objects.filter(history__room_id = room_id)
 
 def check_song_in_queue(request):
   return render_to_response('index.html', {})
