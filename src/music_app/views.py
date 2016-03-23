@@ -13,6 +13,8 @@ from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
 from django.contrib import messages
 
+import json
+
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -241,8 +243,10 @@ def PlaySongView(request, room_id):
 def GetHistoryView(request,room_id):
   room = get_object_or_404(Room, room_id=room_id)
   history_list = room.history_set.all()
-  data = serializers.serialize("json", history_list)
-  return JsonResponse({'history': data})
+  #data = serializers.serialize("json", history_list)
+  history_all = [li['fields'] for li in history_list]
+  hitory = json.load(history_all)
+  return JsonResponse({'history': history})
 
 
 def check_song_in_queue(request, room_id):
