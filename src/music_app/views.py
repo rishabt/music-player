@@ -244,8 +244,14 @@ def GetHistoryView(request,room_id):
   data = serializers.serialize("json", history_list)
   return JsonResponse({'history': data})
 
-def check_song_in_queue(request):
-  return render_to_response('index.html', {})
+
+def check_song_in_queue(request, room_id):
+  song_link = request.POST['link']
+  song = getSongWithRoomAndLink(room_id, song_link)
+  if not song:
+    return 0
+  else:
+    return 1
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)
