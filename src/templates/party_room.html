@@ -115,7 +115,7 @@
       stop: function(event,ui){
           $.ajax({
             type: "POST",
-            url: '/room/' + '30799' + '/queue/',
+            url: '/room/' + '{{ room_id }}' + '/queue/',
             data: {
               list: elm.sortable('toArray')
             },
