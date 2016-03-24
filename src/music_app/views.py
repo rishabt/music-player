@@ -253,7 +253,7 @@ def GetHistoryView(request,room_id):
 
 def UpdateQueueView(request, room_id):
   deleteAllSongsInRoom(room_id)
-  list = request.POST['list']
+  list = request.POST.get('list', False)
 
   party = get_object_or_404(Room, room_id=room_id)
   for i in list:
