@@ -94,6 +94,7 @@
     			$('#replay-button').css('color', 'white');
     		}
 		});
+
       $('#duplicate-button').on("click", function(){
         if($('#duplicate-button').hasClass('dip_selected')){
           setDuplicates(0);
@@ -103,6 +104,7 @@
         }
     });
 
+    var song_list = $('#upcoming').sortable('toArray');
     
     $('#upcoming').sortable({
       change: function(event,ui){
@@ -110,7 +112,7 @@
           type: "POST",
           url: '/room/' + '{{room_id}}' + '/queue/',
           data: {
-            list: $('#upcoming').sortable('toArray')
+            list: song_list
           },
           success: function(success){
             console.log(success);
