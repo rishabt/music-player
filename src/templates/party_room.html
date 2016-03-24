@@ -58,7 +58,10 @@
     }
   };
 
+
+
 	$(document).ready(function(){
+
 
     var dups_allowed = localStorage.getItem("dups_allowed");
     setDuplicates(dups_allowed);
@@ -118,11 +121,10 @@
 	});
 
 
-		</script>
-    <script>
     var vidId;
     function updateId(id, room_id) {
         vidId = id.replace('https://www.youtube.com/embed/', '');
+        $('#current').html(vidId);
           if (!player) {
             onYouTubeIframeAPIReady();
           }
@@ -214,7 +216,7 @@
         {% if song_list%}
         <p id="duplicate-button"> Duplicates</p>
         <p id="replay-button"> Replay</p>
-        <p id="current">"Insert name of video playing here"</p>
+        <p id="current">Current Song</p>
       	<ol id="upcoming">
       	{% for link in song_list %}
       	<li id="{{ link.link }}">
