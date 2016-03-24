@@ -128,7 +128,12 @@
 
       function updateId(id, room_id) {
         vidId = id.replace('https://www.youtube.com/embed/', '');
-        onYouTubeIframeAPIReady();
+        if (!player) {
+          onYouTubeIframeAPIReady();
+        }
+        else {
+          player.loadVideoById(vidId);
+        }
 
       $.ajax({
       type: "POST",
@@ -234,7 +239,13 @@
 
       	{% endif %}
       	<ol id="history">
-      		add history stuff here
+      	{% for link in history_list %}
+          <li id="'{{ link.link }}'">
+          <a class = "item-play historyButton" href = "javascript: embed_video('{{ link.link }}','{{ room_id }}');"> Add 
+          </a>
+            <p class="item-title">{{link.link}}</p>
+          </li>
+        {% endfor %}
       	</ol>
       	<p id="tabs">
         	<a id="upCommingTab" href = "javascript: show_upcoming();">Upcoming</a>
