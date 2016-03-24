@@ -6,7 +6,7 @@
     <title>Music Player</title>
     {% load staticfiles %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+    <script   src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script>  
     <link href="{% static "css/style.css" %}" rel = 'stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script>
@@ -24,8 +24,6 @@
 			html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
 			$('#player').html(html_code);
 		}
-
-
     $.ajax({
       type: "POST",
       url: '/room/' + '{{room_id}}' + '/playsong/',
@@ -33,7 +31,7 @@
         link: link
       },
       success: function(success){
-        console.log(success.data);
+        console.log(success.RESPONSE);
       }    
     });
 	};
@@ -96,12 +94,35 @@
     			$('#replay-button').css('color', 'white');
     		}
 		});
+
       $('#duplicate-button').on("click", function(){
         if($('#duplicate-button').hasClass('dip_selected')){
           setDuplicates(0);
         }
         else {
           setDuplicates(1);
+        }
+    });
+
+    var elm = $('#upcoming');
+
+    var getArray = function(){
+      console.log($('#upcoming').sortable('toArray'));
+      return $('#upcoming').sortable('toArray');
+    }
+
+    $('#upcoming').sortable({
+      stop: function(event,ui){
+          $.ajax({
+            type: "POST",
+            url: '/room/' + '{{ room_id }}' + '/queue/',
+            data: {
+              list: elm.sortable('toArray')
+            },
+            success: function(success){
+              console.log(success);
+            }    
+          });
         }
     });
 	});
@@ -153,12 +174,12 @@
         <p id="current">"Insert name of video playing here"</p>
       	<ol id="upcoming">
       	{% for link in song_list %}
-      	<li>
+      	<li id="'{{ link.link }}'">
       		<form  action="/room/{{ room_id }}/remove/" method="post">
 				{% csrf_token %}
-					<input type="hidden" value="{{link.link}}" name="link">
-					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
-			</form>
+  					<input type="hidden" value="{{link.link}}" name="link">
+  					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
+			   </form>
 			  <a class = "item-play playButton" href = "javascript: embed_video('{{ link.link }}','{{ room_id }}');"> Play 
      		</a>
       		<p class="item-title">{{link.link}}</p>
