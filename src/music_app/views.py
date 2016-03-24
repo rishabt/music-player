@@ -211,7 +211,7 @@ def add_song(request, room_id, client_ip):
     party = get_object_or_404(Room, room_id=room_id)
     user = get_object_or_404(User, ip_address=client_ip)
     msg = ""
-    dups = int(request.POST['dups'])
+    dups = int(request.POST.get('dups', '0'))
 
     if ((dups ==1) or (check_song_in_queue(request, room_id) == 0)):
       if user.status=="H":
