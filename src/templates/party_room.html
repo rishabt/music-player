@@ -128,7 +128,12 @@
 
       function updateId(id, room_id) {
         vidId = id.replace('https://www.youtube.com/embed/', '');
-        onYouTubeIframeAPIReady();
+        if (!player) {
+          onYouTubeIframeAPIReady();
+        }
+        else {
+          player.loadVideoById(vidId);
+        }
 
       $.ajax({
       type: "POST",
