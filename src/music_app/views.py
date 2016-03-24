@@ -12,7 +12,8 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
 from django.contrib import messages
-
+import hashlib
+import json
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
 YOUTUBE_API_SERVICE_NAME = "youtube"
@@ -129,6 +130,9 @@ def get_client_ip(request):
 def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
 
+def deleteAllSongsInRoom(room_id):
+    Song.objects.filter(room__room_id = room_id).delete()
+
 def addSongToHistory(song,party):
     new_song = party.history_set.create(link=song, add_time=timezone.now())
     new_song.save()
@@ -242,10 +246,24 @@ def GetHistoryView(request,room_id):
   room = get_object_or_404(Room, room_id=room_id)
   history_list = room.history_set.all()
   data = serializers.serialize("json", history_list)
-  return JsonResponse({'history': data})
+  l = json.loads(data)
+  history_all = [li['fields']['link'] for li in l]
+  history = json.dumps(history_all)
+  return JsonResponse({'history': history})
+
+def UpdateQueueView(request, room_id):
+  deleteAllSongsInRoom(room_id)
+  list = request.POST.getlist('list[]')
+
+  party = get_object_or_404(Room, room_id=room_id)
+  for i in list:
+    new_song = party.song_set.create(link=i, add_time=timezone.now())
+    new_song.save()
+
+  return JsonResponse({'RESPONSE': 'Queue updated'})
 
 
-def check_song_in_queue(request, room_id):
+def check_song_in_queue(request, room_id, ):
   song_link = request.POST['link']
   song = getSongWithRoomAndLink(room_id, song_link)
   if not song:

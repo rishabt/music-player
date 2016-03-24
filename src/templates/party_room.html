@@ -6,7 +6,7 @@
     <title>Music Player</title>
     {% load staticfiles %}
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
+    <script   src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"   integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw="   crossorigin="anonymous"></script>  
     <link href="{% static "css/style.css" %}" rel = 'stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script>
@@ -25,18 +25,6 @@
 	// 		$('#player').html(html_code);
 	// 	}
 
-
-    $.ajax({
-      type: "POST",
-      url: '/room/' + '{{room_id}}' + '/playsong/',
-      data: {
-        link: link
-      },
-      success: function(success){
-        console.log(success.data);
-      }    
-    });
-	};
 
 	function show_upcoming() {
 		$('#upCommingTab').css('background-color', '#EDECE8');
@@ -96,12 +84,35 @@
     			$('#replay-button').css('color', 'white');
     		}
 		});
+
       $('#duplicate-button').on("click", function(){
         if($('#duplicate-button').hasClass('dip_selected')){
           setDuplicates(0);
         }
         else {
           setDuplicates(1);
+        }
+    });
+
+    var elm = $('#upcoming');
+
+    var getArray = function(){
+      console.log($('#upcoming').sortable('toArray'));
+      return $('#upcoming').sortable('toArray');
+    }
+
+    $('#upcoming').sortable({
+      stop: function(event,ui){
+          $.ajax({
+            type: "POST",
+            url: '/room/' + '{{ room_id }}' + '/queue/',
+            data: {
+              list: elm.sortable('toArray')
+            },
+            success: function(success){
+              console.log(success);
+            }    
+          });
         }
     });
 	});
@@ -115,9 +126,21 @@
       <script>
 
 
-      function updateId(id) {
+      function updateId(id, room_id) {
         vidId = id.replace('https://www.youtube.com/embed/', '');
-        onYouTubeIframeAPIReady()
+        onYouTubeIframeAPIReady();
+
+      $.ajax({
+      type: "POST",
+      url: '/room/' + '{{room_id}}' + '/playsong/',
+      data: {
+        link: id
+      },
+      success: function(success){
+        console.log(success.RESPONSE);
+      }    
+    });
+
       }
       // 2. This code loads the IFrame Player API code asynchronously.
       var tag = document.createElement('script');
@@ -194,13 +217,13 @@
         <p id="current">"Insert name of video playing here"</p>
       	<ol id="upcoming">
       	{% for link in song_list %}
-      	<li>
+      	<li id="'{{ link.link }}'">
       		<form  action="/room/{{ room_id }}/remove/" method="post">
 				{% csrf_token %}
 					<input type="hidden" value="{{link.link}}" name="link">
 					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
 			</form>
-			  <a class = "item-play playButton" href = "javascript: updateId('{{link.link}}')"> Play 
+			  <a class = "item-play playButton" href = "javascript: updateId('{{link.link}}','{{ room_id }}')"> Play 
      		</a>
       		<p class="item-title">{{link.link}}</p>
       	</li>
