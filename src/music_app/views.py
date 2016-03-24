@@ -50,7 +50,7 @@ def room(request, room_id, client_ip):
     videos_returned = []
     room = get_object_or_404(Room, room_id=room_id)
     song_list = room.song_set.order_by('add_time')
-
+    history_list = room.song_get.all()
     #get the query element and send it to the search youtube method, then send the results to the array
     if request.method == 'GET' and request.GET.get("query_element") :
         youtube_query = request.GET.get("query_element")
@@ -62,10 +62,10 @@ def room(request, room_id, client_ip):
 
 
 
-        return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
+        return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list,  "history_list": history_list, 'room_id':room_id, 'client_ip':client_ip})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "party_room.html",  {"song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
+    return render(request, "party_room.html",  {"song_list": song_list, "history_list": history_list,'room_id':room_id, 'client_ip':client_ip})
 
 def get_room_with_id(id):
   return Room.objects.filter(room_id = id)
