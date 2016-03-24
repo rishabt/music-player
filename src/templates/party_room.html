@@ -34,21 +34,6 @@
         console.log(success.RESPONSE);
       }    
     });
-
-    $('#upcoming').sortable({
-      change: function(event,ui){
-        $.ajax({
-          type: "POST",
-          url: '/room/' + '{{room_id}}' + '/queue/',
-          data: {
-            list: $('#upcoming').sortable('toArray')
-          },
-          success: function(success){
-            console.log(success);
-          }    
-        });
-      }
-    });
 	};
 
 	function show_upcoming() {
@@ -118,7 +103,21 @@
         }
     });
 
-    $('#upcoming').sortable();
+    
+    $('#upcoming').sortable({
+      change: function(event,ui){
+        $.ajax({
+          type: "POST",
+          url: '/room/' + '{{room_id}}' + '/queue/',
+          data: {
+            list: $('#upcoming').sortable('toArray')
+          },
+          success: function(success){
+            console.log(success);
+          }    
+        });
+      }
+    });
 	});
 
 
