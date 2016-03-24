@@ -131,7 +131,7 @@ def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
 
 def deleteAllSongsInRoom(room_id):
-    Songs.objects.filter(room__room_id = room_id).delete()
+    Song.objects.filter(room__room_id = room_id).delete()
 
 def addSongToHistory(song,party):
     new_song = party.history_set.create(link=song, add_time=timezone.now())
