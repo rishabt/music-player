@@ -115,6 +115,11 @@
           });
         }
     });
+
+
+    $('#historyButton').click(function(){
+      $('#historyAddForm').submit();  
+    })
 	});
 
 
@@ -236,10 +241,10 @@
       	<ol id="history">
       	{% for link in history_list %}
           <li id="'{{ link.link }}'">
-              <form action="{% url 'addsong' room_id client_ip %}" method="post">
+              <form id="historyAddForm" action="{% url 'addsong' room_id client_ip %}" method="post">
                 <input type="hidden" value="{{link.link}}" name="link">
                 <input id="duplicates_allowed" type="hidden" value="0" name="dups">
-                <input class = "item-play historyButton" type="submit" value="Add Song">Add
+                <a class = "item-play" id="historyButton">Add</a>
                 <p class="item-title">{{link.link}}</p>
               </form>
           </li>
