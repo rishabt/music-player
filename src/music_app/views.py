@@ -252,9 +252,13 @@ def GetHistoryView(request,room_id):
   return JsonResponse({'history': history})
 
 def UpdateQueueView(request, room_id):
-  #deleteAllSongsInRoom(room_id)
+  deleteAllSongsInRoom(room_id)
   list = request.POST['list']
 
+  party = get_object_or_404(Room, room_id=room_id)
+  for i in list:
+    new_song = party.song_set.create(link=i, add_time=timezone.now())
+    new_song.save()
 
 
 def check_song_in_queue(request, room_id, ):
