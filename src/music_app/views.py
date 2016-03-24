@@ -130,6 +130,9 @@ def get_client_ip(request):
 def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
 
+def deleteAllSongsInRoom(room_id):
+    Songs.objects.filter(room__room_id = room_id).delete()
+
 def addSongToHistory(song,party):
     new_song = party.history_set.create(link=song, add_time=timezone.now())
     new_song.save()
@@ -248,8 +251,13 @@ def GetHistoryView(request,room_id):
   history = json.dumps(history_all)
   return JsonResponse({'history': history})
 
+def UpdateQueueView(request, room_id):
+  #deleteAllSongsInRoom(room_id)
+  list = request.POST['list']
 
-def check_song_in_queue(request, room_id):
+
+
+def check_song_in_queue(request, room_id, ):
   song_link = request.POST['link']
   song = getSongWithRoomAndLink(room_id, song_link)
   if not song:
