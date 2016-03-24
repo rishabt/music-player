@@ -131,7 +131,7 @@ def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
 
 def deleteAllSongsInRoom(room_id):
-    Songs.objects.filter(room__room_id = room_id).delete()
+    Song.objects.filter(room__room_id = room_id).delete()
 
 def addSongToHistory(song,party):
     new_song = party.history_set.create(link=song, add_time=timezone.now())
@@ -253,12 +253,14 @@ def GetHistoryView(request,room_id):
 
 def UpdateQueueView(request, room_id):
   deleteAllSongsInRoom(room_id)
-  list = request.POST['list']
+  list = request.POST.getlist('list[]')
 
   party = get_object_or_404(Room, room_id=room_id)
   for i in list:
     new_song = party.song_set.create(link=i, add_time=timezone.now())
     new_song.save()
+
+  return JsonResponse({'RESPONSE': 'Queue updated'})
 
 
 def check_song_in_queue(request, room_id, ):
