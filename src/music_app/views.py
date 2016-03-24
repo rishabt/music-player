@@ -7,7 +7,7 @@ from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 from django.template import RequestContext
 from random import randint
-from music_app.models import Room, Song, User
+from music_app.models import Room, Song, User, History
 from django.utils import timezone
 from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
@@ -64,10 +64,7 @@ def room(request, room_id, client_ip):
         return render(request, "party_room.html", {"response_message": videos_returned, "song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
     # if the user hasn't entered anything in the search bar, just do nothing
-    return render(request, "party_room.html", {"song_list": song_list})
-
-def check_room_exists(id):
-  return Room.objects.filter(room_id = id).exists()
+    return render(request, "party_room.html",  {"song_list": song_list, 'room_id':room_id, 'client_ip':client_ip})
 
 def get_room_with_id(id):
   return Room.objects.filter(room_id = id)
@@ -77,9 +74,18 @@ def create_a_new_room(id,song_lim = DEFAULT_SONG_LIMIT):
   new_room.save()
   return new_room
 
+def check_room_exists(id):
+  return Room.objects.filter(room_id = id).exists()
+
 def check_if_user_exists(id):
   client_ip = id.replace('.','')
   return User.objects.filter(ip_address = client_ip)
+
+# Returns User status
+def check_user_status(id):
+  user = get_object_or_404(User, ip_address=id)
+  return user.status
+
 
 def create_user(id):
     client_ip = id.replace('.','')
@@ -122,6 +128,10 @@ def get_client_ip(request):
 
 def getSongWithRoomAndLink(room_id,song_link):
     return Song.objects.filter(room__room_id = room_id, link = song_link)
+
+def addSongToHistory(song,party):
+    new_song = party.history_set.create(link=song, add_time=timezone.now())
+    new_song.save()
 
 def newroom(request):
     ip_address = get_client_ip(request)
@@ -176,13 +186,19 @@ def Check_Room_Exists(request):
     return JsonResponse({"RESPONSE" : False})
 
 
-def RemoveMusic(request, room_id, song_link):
+def RemoveMusic(request, room_id):
+  song_link = request.POST['link']
   song = getSongWithRoomAndLink(room_id, song_link)
   ip_address = get_client_ip(request)
   client_ip = ip_address.replace('.','')
   song.delete()
   return HttpResponseRedirect(reverse('room',args=(room_id,client_ip)))
 
+def IdentifyUserView(request):
+  ip_address = get_client_ip(request)
+  client_ip = ip_address.replace('.','')
+  status = check_user_status(client_ip)
+  return JsonResponse({"STATUS" : status})
 
 def get_song_limit(request):
   return render_to_response('index.html', context_instance=RequestContext(request))
@@ -190,24 +206,52 @@ def get_song_limit(request):
 def add_song(request, room_id, client_ip):
     party = get_object_or_404(Room, room_id=room_id)
     user = get_object_or_404(User, ip_address=client_ip)
+    msg = ""
+    dups = int(request.POST.get('dups', '0'))
 
-    if user.status=="H":
-        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
-        new_song.save()
-        msg = "Song Added"
+    if ((dups ==1) or (check_song_in_queue(request, room_id) == 0)):
+      if user.status=="H":
+          new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+          new_song.save()
+          msg = "Song Added"
 
-    elif (user.songs_added<party.song_limit):
-        new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
-        new_song.save()
-        user.songs_added += 1
-        user.save()
-        msg = "Song Added"
+      elif (user.songs_added<party.song_limit):
+          new_song = party.song_set.create(link=request.POST['link'], add_time=timezone.now())
+          new_song.save()
+          user.songs_added += 1
+          user.save()
+          msg = "Song Added"
 
+      else:
+          msg = "Song limit reached"
     else:
-        msg = "Song limit reached"
+      msg = "Song already in queue bro"
 
     messages.add_message(request, messages.INFO, msg)
     return HttpResponseRedirect(reverse('room', args=(room_id, client_ip)))
+  
+def PlaySongView(request, room_id):
+  party = get_object_or_404(Room, room_id=room_id)
+  song = request.POST['link']
+  addSongToHistory(song,party)
+  msg = "Song Added To History"
+  messages.add_message(request, messages.INFO, msg)
+  return JsonResponse({'RESPONSE': song + 'Added successfully'})
+
+def GetHistoryView(request,room_id):
+  room = get_object_or_404(Room, room_id=room_id)
+  history_list = room.history_set.all()
+  data = serializers.serialize("json", history_list)
+  return JsonResponse({'history': data})
+
+
+def check_song_in_queue(request, room_id):
+  song_link = request.POST['link']
+  song = getSongWithRoomAndLink(room_id, song_link)
+  if not song:
+    return 0
+  else:
+    return 1
 
 # def room(request, room_id, play_link=''):
     # room = get_object_or_404(Room, room_id=room_id)

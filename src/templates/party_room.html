@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html class="no-js" lang="en">
   <head>
@@ -12,27 +11,103 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script>
 	  
-	function embed_video(link) {
-
+	function embed_video(link,room_id) {
 		var url = link;
 		var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
-
 		if (!pattern.test(url)) {
-			html_code = '<iframe id="embeded_video" width="640" height="480" style="background: black;"> </iframe>'
+			html_code = '<iframe id="embeded_video" width="640" height="360" style="background: black;"> </iframe>'
 			$('#player').html(html_code);
 			alert("Failed to play song. Try again");
-
 		}
 		else {
 			link += "?autoplay=1"
-			html_code = '<iframe id="embeded_video" width="640" height="480" src=' + link +'> </iframe>'
+			html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
 			$('#player').html(html_code);
 		}
+
+
+    $.ajax({
+      type: "POST",
+      url: '/room/' + '{{room_id}}' + '/playsong/',
+      data: {
+        link: link
+      },
+      success: function(success){
+        console.log(success.data);
+      }    
+    });
 	};
 
-	
+	function show_upcoming() {
+		$('#upCommingTab').css('background-color', '#EDECE8');
+		$('#historyTab').css('background-color', '#CDCDCD');
+		$('#upcoming').show();
+		$('#history').hide();
+	};
 
-	</script>
+	function show_history() {
+		$('#historyTab').css('background-color', '#EDECE8');
+		$('#upCommingTab').css('background-color', '#CDCDCD');
+		$('#history').show();
+		$('#upcoming').hide();
+	};
+
+
+  function setDuplicates(status) {
+    if(status == 0) {
+      localStorage.setItem("dups_allowed", "0");
+      $('#duplicates_allowed').val("0");
+      $('#duplicate-button').css('background', 'none');
+      $('#duplicate-button').css('color', '#1B2B83');
+      $('#duplicate-button').removeClass('dip_selected');
+    }
+    else {
+      localStorage.setItem("dups_allowed", "1");
+      $('#duplicates_allowed').val("1");
+      $('#duplicate-button').addClass('dip_selected');
+      $('#duplicate-button').css('background-color', '#1171A2');
+      $('#duplicate-button').css('color', 'white');
+    }
+  };
+
+	$(document).ready(function(){
+
+    var dups_allowed = localStorage.getItem("dups_allowed");
+    setDuplicates(dups_allowed);
+
+    $.ajax({
+      type: "GET",
+      url: '/room/' + '{{ room_id }}' + '/history/',
+      success: function(success){
+        console.log(success);
+      }    
+    });
+
+    	show_upcoming();
+    	$('#replay-button').on("click", function(){
+    		if($('#replay-button').hasClass('selected')){
+    			$('#replay-button').css('background', 'none');
+    			$('#replay-button').css('color', '#1B2B83');
+    			$('#replay-button').removeClass('selected');
+    		}
+    		else {
+    			$('#replay-button').addClass('selected');
+    			$('#replay-button').css('background-color', '#1171A2');
+    			$('#replay-button').css('color', 'white');
+    		}
+		});
+      $('#duplicate-button').on("click", function(){
+        if($('#duplicate-button').hasClass('dip_selected')){
+          setDuplicates(0);
+        }
+        else {
+          setDuplicates(1);
+        }
+    });
+	});
+
+
+		</script>
 
 </head>
 
@@ -61,6 +136,7 @@
 				<form action="{% url 'addsong' room_id client_ip %}" method="post">
 				{% csrf_token %}
 					<input type="hidden" value="{{link.1}}" name="link">
+          <input id="duplicates_allowed" type="hidden" value="0" name="dups">
 					<input type="submit" value="Add Song">
 				</form>
 			</span> 
@@ -72,67 +148,70 @@
     </div>
     <div id="playlist">
         {% if song_list%}
-    <ul class="list-group pull-left" style="width: 550px; margin-left: 30px;">
-    {% for link in song_list %}
-     <li class="list-group-item" ><h5>{{ link.link }}		<a href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play </a></h5> </li>
-    {% endfor %}
-    </ul>
-    {% else %}
-    <h5> <a href="#"> Add music to the room to start playing</a> </h5>
-    {% endif %}
+        <p id="duplicate-button"> Duplicates</p>
+        <p id="replay-button"> Replay</p>
+        <p id="current">"Insert name of video playing here"</p>
+      	<ol id="upcoming">
+      	{% for link in song_list %}
+      	<li>
+      		<form  action="/room/{{ room_id }}/remove/" method="post">
+				{% csrf_token %}
+					<input type="hidden" value="{{link.link}}" name="link">
+					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
+			</form>
+			  <a class = "item-play playButton" href = "javascript: embed_video('{{ link.link }}','{{ room_id }}');"> Play 
+     		</a>
+      		<p class="item-title">{{link.link}}</p>
+      	</li>
+      	{% endfor %}
+      	</ol>
+      	{% else %}
+        <p id="current">Add music to the room to start playing</p>
+
+      	{% endif %}
+      	<ol id="history">
+      		add history stuff here
+      	</ol>
+      	<p id="tabs">
+        	<a id="upCommingTab" href = "javascript: show_upcoming();">Upcoming</a>
+        	<a id="historyTab" href = "javascript: show_history();">History</a>
+      	</p>
     </div>
 
-<!-- 	<div class="row" style="margin-top: 20px;">
-	<div class="large-3 columns"><br></div>
-	<div class="large-5 columns">
-		<form action="http:{{room}}" class="search-wrapper" method="GET">
-			<input name="query_element" type="text" placeholder="Search here..." required="" maxlength="100">
-		</form>
-	</div>
-	<div class="large-4 columns">
-		<button type="submit" value="Search">Search</button>
-		<a style="margin-left: 200px;" href="mailto:team_music@ecse428.se"> Contact Us </a>
-	</div>
-	</div>
-
-
-	<div class="row">
-	
-	<div class="medium-6 columns">
-	<h5><ins><b> Search Results: </b></ins></h5>
-	{% for link in response_message %}
-		<div class="video_link" style = "display: table; margin-bottom: 20px;">
-			<span>
-				<img style = "vertical-align: middle; display: table-cell;" src ={{ link.2 }} />
-			</span>
-			<span style = "vertical-align:middle; display: table-cell;">
-				<a  href="#"> {{ link.0 }} </a>
-			</span> 
-		</div>
- 	{% endfor %}
-	</div>
-	
-    <div class="medium-6 columns" style="border-left: 1px solid black; height: 700px;">
-    <div id="embeded_video" style="text-align: center"> <iframe id="embeded_video" width="420" height="315" style="background: black; margin-top: 30px;"> </iframe></div>
-    <br>
-    <h5 style="text-align: left; margin-left: 100px;"><ins><b> Room Playlist: </b></ins></h5>
-    {% if song_list%}
-    <ul class="list-group pull-left" style="width: 550px; margin-left: 30px;">
-    {% for link in song_list %}
-     <li class="list-group-item" ><h5>{{ link.link }}		<a href = "javascript: embed_video('{{ link.link }}');" class="pull-right" style="border-left: 1px solid black">  &nbsp; play </a></h5> </li>
-    {% endfor %}
-    </ul>
-    {% else %}
-    <h5> <a href="#"> Add music to the room to start playing</a> </h5>
-    {% endif %}
-	</div>
-
-		
-    </div> -->
-
-
+    <footer>
+    </footer>
 
 	
 </body>
+<script type="text/javascript">
+	function addRemoveMusicListener(){
+      var removeButton = $(".removeButton");
+      removeButton.click(function(){
+      	var link = $(this).parent().find("span").val();
+      	var room_id = getRoomId();
+       	$.post('/room/'+room_id+'link'+link);
+        //window.location.replace("/room/" + room_id.val());
+      })
+    }
+	function getRoomId(){
+		var pattern = /\d+/g;
+		var path = window.location.pathname;
+		return pattern.exec(path);
+	}
+	(function(){
+		// Check user status
+		$.get('/room/user/status')
+		.then(function(success){
+			if(success.STATUS == "G"){
+				$(".playButton").hide();
+				$(".removeButton").hide();
+        $("#duplicate-button").hide();
+        $("#replay-button").hide();
+			}else{
+				addRemoveMusicListener();
+			}
+		});
+	})();
+</script>
 
 </html>
