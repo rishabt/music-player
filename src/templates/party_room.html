@@ -11,30 +11,20 @@
     <link href='http://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
 	<script>
 	  
-	function embed_video(link,room_id) {
-		var url = link;
-		var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
-		if (!pattern.test(url)) {
-			html_code = '<iframe id="embeded_video" width="640" height="360" style="background: black;"> </iframe>'
-			$('#player').html(html_code);
-			alert("Failed to play song. Try again");
-		}
-		else {
-			link += "?autoplay=1"
-			html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
-			$('#player').html(html_code);
-		}
-    $.ajax({
-      type: "POST",
-      url: '/room/' + '{{room_id}}' + '/playsong/',
-      data: {
-        link: link
-      },
-      success: function(success){
-        console.log(success.RESPONSE);
-      }    
-    });
-	};
+	// function embed_video(link,room_id) {
+	// 	var url = link;
+	// 	var pattern = /^(http|https)?:\/\/[a-zA-Z0-9-\.]+\.[a-z]{2,4}/;
+	// 	if (!pattern.test(url)) {
+	// 		html_code = '<iframe id="embeded_video" width="640" height="360" style="background: black;"> </iframe>'
+	// 		$('#player').html(html_code);
+	// 		alert("Failed to play song. Try again");
+	// 	}
+	// 	else {
+	// 		link += "?autoplay=1"
+	// 		html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
+	// 		$('#player').html(html_code);
+	// 	}
+
 
 	function show_upcoming() {
 		$('#upCommingTab').css('background-color', '#EDECE8');
@@ -130,6 +120,60 @@
 
 		</script>
 
+
+
+
+      <script>
+
+
+      function updateId(id, room_id) {
+        vidId = id.replace('https://www.youtube.com/embed/', '');
+        onYouTubeIframeAPIReady();
+
+      $.ajax({
+      type: "POST",
+      url: '/room/' + '{{room_id}}' + '/playsong/',
+      data: {
+        link: id
+      },
+      success: function(success){
+        console.log(success.RESPONSE);
+      }    
+    });
+
+      }
+      // 2. This code loads the IFrame Player API code asynchronously.
+      var tag = document.createElement('script');
+
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '360',
+          width: '640',
+          videoId: vidId,
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+      }
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+      function onPlayerStateChange(event) {
+        if (event.data == YT.PlayerState.ENDED) {
+          alert("song has ended");
+        }
+      }
+
+    </script>
+
 </head>
 
 {% load staticfiles %}
@@ -165,7 +209,6 @@
  	{% endfor %}
     </div>
     <div id="player">
-      <iframe id="embeded_video" width="640" height="480" style="background: black;"> </iframe>
     </div>
     <div id="playlist">
         {% if song_list%}
@@ -177,10 +220,10 @@
       	<li id="'{{ link.link }}'">
       		<form  action="/room/{{ room_id }}/remove/" method="post">
 				{% csrf_token %}
-  					<input type="hidden" value="{{link.link}}" name="link">
-  					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
-			   </form>
-			  <a class = "item-play playButton" href = "javascript: embed_video('{{ link.link }}','{{ room_id }}');"> Play 
+					<input type="hidden" value="{{link.link}}" name="link">
+					<input class="item-delete" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Remove">
+			</form>
+			  <a class = "item-play playButton" href = "javascript: updateId('{{link.link}}','{{ room_id }}')"> Play 
      		</a>
       		<p class="item-title">{{link.link}}</p>
       	</li>
