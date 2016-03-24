@@ -256,9 +256,9 @@
               <form id="historyAddForm" action="{% url 'addsong' room_id client_ip %}" method="post">
                 <input type="hidden" value="{{link.link}}" name="link">
                 <input class="duplicates_allowed" type="hidden" value="0" name="dups">
-                <input type="submit" value="Add" class="item-play"></input>
-                <p class="item-title">{{link.link}}</p>
+                <input class="item-play" style="border:none; padding: 0; height: 36px; font-size: 16px; cursor: pointer;" type="submit" value="Add"></input>
               </form>
+              <p class="item-title">{{link.link}}</p>
           </li>
         {% endfor %}
       	</ol>
