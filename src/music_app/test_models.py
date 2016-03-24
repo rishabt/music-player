@@ -2,8 +2,11 @@ from django.test import TestCase
 from music_app.models import Room
 from music_app.models import Song
 from music_app.models import User
+from music_app.models import History
 from datetime import datetime
 from django.db import IntegrityError
+from django.core.exceptions import ValidationError
+from django.db import models
 
 
 class RoomTestCase(TestCase):
@@ -69,3 +72,35 @@ class UserTestCase(TestCase):
     def test_status(self):
         u = User(ip_address = 100,songs_added = 10000, status = "OK")
         self.assertRaises(ValueError,u.save())
+
+class HistoryTestCase(TestCase):
+
+    def testRoom(self):
+        r = Room(room_id=1234)
+        r.save()
+
+        d = datetime.now()
+
+        h = History(link="test",add_time = d,room = r)
+        h.save()
+        self.assertTrue(1 == 1)
+
+    def testlink(self):
+        r = Room(room_id=1234)
+        r.save()
+
+        d = datetime.now()
+
+        h = History(link=1234,add_time = d,room = r)
+        h.save()
+        self.assertRaises(ValueError,h.save())
+
+    def test_add_time(self):
+        r = Room(room_id=1234)
+        r.save()
+
+        d = "Hello"
+
+        h = History(link="1234",add_time = d,room = r)
+        with self.assertRaises(ValidationError):
+            h.save()
