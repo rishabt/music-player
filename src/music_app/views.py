@@ -238,8 +238,6 @@ def PlaySongView(request, room_id):
   party = get_object_or_404(Room, room_id=room_id)
   song = request.POST['link']
   addSongToHistory(song,party)
-  msg = "Song Added To History"
-  messages.add_message(request, messages.INFO, msg)
   return JsonResponse({'RESPONSE': song + 'Added successfully'})
 
 def GetHistoryView(request,room_id):
@@ -261,7 +259,6 @@ def UpdateQueueView(request, room_id):
     new_song.save()
 
   return JsonResponse({'RESPONSE': 'Queue updated'})
-
 
 def check_song_in_queue(request, room_id, ):
   song_link = request.POST['link']
