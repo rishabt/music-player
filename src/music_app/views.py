@@ -12,7 +12,7 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from .forms import SongLimitForm
 from django.contrib import messages
-
+import hashlib
 
 DEVELOPER_KEY = "AIzaSyD8HURVZ1FujOXAK1NzoNHceCZYL6OLBzg"
 YOUTUBE_API_SERVICE_NAME = "youtube"

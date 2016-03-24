@@ -157,7 +157,7 @@
         <p id="current">"Insert name of video playing here"</p>
       	<ol id="upcoming">
       	{% for link in song_list %}
-      	<li>
+      	<li id="'{{ link.link }}'">
       		<form  action="/room/{{ room_id }}/remove/" method="post">
 				{% csrf_token %}
   					<input type="hidden" value="{{link.link}}" name="link">
