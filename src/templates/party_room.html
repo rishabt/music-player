@@ -44,14 +44,14 @@
   function setDuplicates(status) {
     if(status == 0) {
       localStorage.setItem("dups_allowed", "0");
-      $('#duplicates_allowed').val("0");
-      $('#duplicate-button').css('background', 'none');
+      $('.duplicates_allowed').val("0");
+      $('duplicate-button').css('background', 'none');
       $('#duplicate-button').css('color', '#1B2B83');
       $('#duplicate-button').removeClass('dip_selected');
     }
     else {
       localStorage.setItem("dups_allowed", "1");
-      $('#duplicates_allowed').val("1");
+      $('.duplicates_allowed').val("1");
       $('#duplicate-button').addClass('dip_selected');
       $('#duplicate-button').css('background-color', '#1171A2');
       $('#duplicate-button').css('color', 'white');
@@ -203,7 +203,7 @@
 				<form action="{% url 'addsong' room_id client_ip %}" method="post">
 				{% csrf_token %}
 					<input type="hidden" value="{{link.1}}" name="link">
-          <input id="duplicates_allowed" type="hidden" value="0" name="dups">
+          <input class="duplicates_allowed" type="hidden" value="0" name="dups">
 					<input type="submit" value="Add Song">
 				</form>
 			</span> 
@@ -240,7 +240,7 @@
           <li id="'{{ link.link }}'">
               <form id="historyAddForm" action="{% url 'addsong' room_id client_ip %}" method="post">
                 <input type="hidden" value="{{link.link}}" name="link">
-                <input id="duplicates_allowed" type="hidden" value="1" name="dups">
+                <input class="duplicates_allowed" type="hidden" value="0" name="dups">
                 <input type="submit" value="Add Song" class="item-play">Add</input>
                 <p class="item-title">{{link.link}}</p>
               </form>
