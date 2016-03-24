@@ -50,7 +50,7 @@ def room(request, room_id, client_ip):
     videos_returned = []
     room = get_object_or_404(Room, room_id=room_id)
     song_list = room.song_set.order_by('add_time')
-    history_list = room.song_get.all()
+    history_list = room.history_set.all()
     #get the query element and send it to the search youtube method, then send the results to the array
     if request.method == 'GET' and request.GET.get("query_element") :
         youtube_query = request.GET.get("query_element")
