@@ -24,8 +24,6 @@
 			html_code = '<iframe id="embeded_video" width="640" height="360" src=' + link +'> </iframe>'
 			$('#player').html(html_code);
 		}
-
-
     $.ajax({
       type: "POST",
       url: '/room/' + '{{room_id}}' + '/playsong/',
@@ -37,7 +35,20 @@
       }    
     });
 
-    $('#upcoming').sortable();
+    $('#upcoming').sortable({
+      change: function(event,ui){
+        $.ajax({
+          type: "POST",
+          url: '/room/' + '{{room_id}}' + '/queue/',
+          data: {
+            list: $('#upcoming').sortable('toArray')
+          },
+          success: function(success){
+            console.log(success);
+          }    
+        });
+      }
+    });
 	};
 
 	function show_upcoming() {
