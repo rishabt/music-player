@@ -115,11 +115,6 @@
           });
         }
     });
-
-
-    $('#historyButton').click(function(){
-      $('#historyAddForm').submit();  
-    })
 	});
 
 
@@ -244,7 +239,7 @@
               <form id="historyAddForm" action="{% url 'addsong' room_id client_ip %}" method="post">
                 <input type="hidden" value="{{link.link}}" name="link">
                 <input id="duplicates_allowed" type="hidden" value="0" name="dups">
-                <a class = "item-play" id="historyButton">Add</a>
+                <input type="submit" value="Add Song" class="item-play">Add</input>
                 <p class="item-title">{{link.link}}</p>
               </form>
           </li>
