@@ -243,9 +243,10 @@ def PlaySongView(request, room_id):
 def GetHistoryView(request,room_id):
   room = get_object_or_404(Room, room_id=room_id)
   history_list = room.history_set.all()
-  #data = serializers.serialize("json", history_list)
-  history_all = [li['fields'] for li in history_list]
-  hitory = json.load(history_all)
+  data = serializers.serialize("json", history_list)
+  l = json.loads(data)
+  history_all = [li['fields']['link'] for li in l]
+  history = json.dumps(history_all)
   return JsonResponse({'history': history})
 
 
