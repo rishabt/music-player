@@ -260,6 +260,8 @@ def UpdateQueueView(request, room_id):
     new_song = party.song_set.create(link=i, add_time=timezone.now())
     new_song.save()
 
+  return JsonResponse({'RESPONSE': 'Queue updated'})
+
 
 def check_song_in_queue(request, room_id, ):
   song_link = request.POST['link']
